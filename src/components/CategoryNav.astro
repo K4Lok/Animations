@@ -597,34 +597,37 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
   const catFloat = document.querySelector<HTMLElement>("[data-catfloat]");
   const floatNum = catFloat?.querySelector<HTMLElement>("[data-catfloat-num]") ?? null;
   const floatText = catFloat?.querySelector<HTMLElement>("[data-catfloat-text]") ?? null;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const floatOrder = sections.map((s) => s.id);
   let floatIdx = -1;
+  // Last observed scroll direction: 1 = scrolling down (toward the bottom),
+  // -1 = scrolling up (toward the top). Drives which way the title slides.
+  let scrollDir = 1;
 
-  const swapFloatText = (text: string, forward: boolean) => {
+  const swapFloatText = (text: string, down: boolean) => {
     if (!floatText) return;
-    if (reduceMotion || floatIdx === -1) {
-      floatText.textContent = text;
-      return;
-    }
-    const dir = forward ? -1 : 1; // exit toward top when moving forward
     floatText.getAnimations().forEach((a) => a.cancel());
+
+    // The text rolls a full line height; the viewport's overflow clip turns it
+    // into a clean wheel. Direction follows the scroll: going down, the old
+    // line exits upward and the new one rises from below. This roll plays
+    // regardless of the OS Reduce Motion setting (intentional design choice).
+    const dir = down ? -1 : 1;
     const exit = floatText.animate(
       [
         { transform: "translateY(0)", opacity: 1 },
-        { transform: `translateY(${dir * 110}%)`, opacity: 0 },
+        { transform: `translateY(${dir * 100}%)`, opacity: 0 },
       ],
-      { duration: 230, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" }
+      { duration: 220, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" }
     );
     exit.onfinish = () => {
       floatText.textContent = text;
       floatText.getAnimations().forEach((a) => a.cancel());
       floatText.animate(
         [
-          { transform: `translateY(${-dir * 110}%)`, opacity: 0 },
+          { transform: `translateY(${-dir * 100}%)`, opacity: 0 },
           { transform: "translateY(0)", opacity: 1 },
         ],
-        { duration: 360, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+        { duration: 340, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
       );
     };
   };
@@ -633,10 +636,11 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     if (!catFloat || !id) return;
     const idx = floatOrder.indexOf(id);
     if (idx < 0 || idx === floatIdx) return;
-    const forward = floatIdx === -1 ? true : idx > floatIdx;
+    const first = floatIdx === -1;
     floatIdx = idx;
     if (floatNum) floatNum.textContent = String(idx + 1).padStart(2, "0");
-    swapFloatText(titleById.get(id) ?? "", forward);
+    // Slide direction follows the actual scroll direction (top vs. bottom).
+    swapFloatText(titleById.get(id) ?? "", first ? true : scrollDir > 0);
   };
 
   let mtocOpen = false;
@@ -725,10 +729,16 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
   }
 
   let ticking = false;
+  let lastY = window.scrollY;
   const onScroll = () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) > 1) {
+        scrollDir = y > lastY ? 1 : -1;
+        lastY = y;
+      }
       computeActive();
       updateMtoc();
       ticking = false;
