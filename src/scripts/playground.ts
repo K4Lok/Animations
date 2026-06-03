@@ -1,4 +1,5 @@
 import { loadDemo } from "./demos/index";
+import { recordAnimations } from "./demos/anim";
 import type { ControlSpec, DemoInstance, Params } from "./demos/types";
 
 interface PlaygroundConfig {
@@ -14,6 +15,16 @@ class AnimPlayground extends HTMLElement {
   private codeWrap!: HTMLElement;
   private observer: IntersectionObserver | null = null;
   private booted = false;
+  private hovering = false;
+  private looping = false;
+  private hoverHost: HTMLElement | null = null;
+  private readonly onEnter = () => {
+    this.hovering = true;
+    void this.startLoop();
+  };
+  private readonly onLeave = () => {
+    this.hovering = false;
+  };
 
   connectedCallback() {
     const configEl = this.querySelector<HTMLScriptElement>(".pg-config");
@@ -45,6 +56,9 @@ class AnimPlayground extends HTMLElement {
 
   disconnectedCallback() {
     this.observer?.disconnect();
+    this.hovering = false;
+    this.hoverHost?.removeEventListener("pointerenter", this.onEnter);
+    this.hoverHost?.removeEventListener("pointerleave", this.onLeave);
     this.instance?.cleanup?.();
   }
 
@@ -56,11 +70,6 @@ class AnimPlayground extends HTMLElement {
     this.append(this.stage);
 
     const toolbar = el("div", "pg-toolbar");
-    const replay = el("button", "pg-btn pg-replay") as HTMLButtonElement;
-    replay.type = "button";
-    replay.innerHTML = `${iconReplay()}<span>Replay</span>`;
-    replay.addEventListener("click", () => this.run());
-
     const codeToggle = el("button", "pg-btn pg-ghost pg-code-toggle") as HTMLButtonElement;
     codeToggle.type = "button";
     codeToggle.textContent = "Code";
@@ -70,7 +79,7 @@ class AnimPlayground extends HTMLElement {
       if (open) this.updateCode();
     });
 
-    toolbar.append(replay, codeToggle);
+    toolbar.append(codeToggle);
     this.append(toolbar);
 
     if (this.controls.length) {
@@ -162,8 +171,8 @@ class AnimPlayground extends HTMLElement {
       return;
     }
     this.instance = factory(this.stage);
-    if (this.instance.continuous) this.querySelector(".pg-replay")?.classList.add("is-hidden");
     this.run();
+    if (!this.instance.continuous) this.setupHover();
   }
 
   private run() {
@@ -171,6 +180,35 @@ class AnimPlayground extends HTMLElement {
     const params = this.collectParams();
     this.instance.play(params);
     if (this.codeWrap.classList.contains("is-open")) this.updateCode();
+  }
+
+  /** Loop the demo for as long as a pointer rests on the card. */
+  private setupHover() {
+    this.hoverHost = this.closest<HTMLElement>(".term-card") ?? this;
+    this.hoverHost.addEventListener("pointerenter", this.onEnter);
+    this.hoverHost.addEventListener("pointerleave", this.onLeave);
+  }
+
+  private async startLoop() {
+    if (this.looping || !this.instance) return;
+    this.looping = true;
+    try {
+      while (this.hovering && this.instance) {
+        const params = this.collectParams();
+        const batch = recordAnimations(() => this.instance!.play(params));
+        if (this.codeWrap.classList.contains("is-open")) this.updateCode();
+        if (!batch.length) break;
+        try {
+          await Promise.all(batch.map((c) => c.finished));
+        } catch {
+          break;
+        }
+        if (!this.hovering) break;
+        await delay(420);
+      }
+    } finally {
+      this.looping = false;
+    }
   }
 
   private updateCode() {
@@ -188,8 +226,8 @@ function el(tag: string, className: string): HTMLElement {
   return node;
 }
 
-function iconReplay(): string {
-  return `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>`;
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 if (!customElements.get("anim-playground")) {

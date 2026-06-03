@@ -10,24 +10,74 @@ const { term } = Astro.props;
 ---
 
 <article class="term-card" id={term.id} data-term={term.name.toLowerCase()}>
-  <div class="term-card__head">
-    <h3 class="term-card__name">{term.name}</h3>
-    <p class="term-card__blurb">{term.blurb}</p>
+  <div class="term-card__inner">
+    <div class="term-card__head">
+      <h3 class="term-card__name">{term.name}</h3>
+      <p class="term-card__blurb">{term.blurb}</p>
+    </div>
+    <Playground demo={term.demo} controls={term.controls} />
   </div>
-  <Playground demo={term.demo} controls={term.controls} />
 </article>
 
 <style>
   .term-card {
+    position: relative;
+    display: flex;
+    border-radius: 14px;
+    padding: 1px;
+    /* A warm beige shine rides the border, following the cursor via --x/--y.
+       When the pointer leaves, the script parks the glow off-canvas (-1000px)
+       and only the hairline base remains. */
+    background:
+      radial-gradient(
+        220px circle at var(--x, -1000px) var(--y, -1000px),
+        #e6cda4 0%,
+        #f0e3cb 52%,
+        transparent 78%
+      ),
+      var(--border-hairline);
+    box-shadow: var(--shadow-card);
+    scroll-margin-top: 140px;
+    transition:
+      box-shadow 0.35s ease,
+      transform 0.35s ease;
+  }
+  .term-card:hover {
+    box-shadow: var(--shadow-floating);
+    transform: translateY(-2px);
+  }
+  .term-card__inner {
+    position: relative;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 16px;
     padding: 20px;
     background: var(--color-canvas-white);
-    border-radius: 12px;
-    border: 1px solid var(--border-hairline);
-    box-shadow: var(--shadow-card);
-    scroll-margin-top: 140px;
+    border-radius: 13px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .term-card__inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      340px circle at var(--x, -1000px) var(--y, -1000px),
+      rgba(227, 203, 166, 0.16) 0%,
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .term-card:hover .term-card__inner::before {
+    opacity: 1;
+  }
+  .term-card__inner > * {
+    position: relative;
+    z-index: 1;
   }
   .term-card__head {
     display: flex;
@@ -47,4 +97,31 @@ const { term } = Astro.props;
     letter-spacing: 0.1px;
     max-width: 46ch;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .term-card {
+      transition: none;
+    }
+    .term-card:hover {
+      transform: none;
+    }
+  }
 </style>
+
+<script>
+  function trackCard(card: HTMLElement) {
+    card.addEventListener("pointermove", (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--x", `${e.clientX - rect.left}px`);
+      card.style.setProperty("--y", `${e.clientY - rect.top}px`);
+    });
+    card.addEventListener("pointerleave", () => {
+      card.style.setProperty("--x", "-1000px");
+      card.style.setProperty("--y", "-1000px");
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLElement>(".term-card")
+    .forEach((card) => trackCard(card));
+</script>

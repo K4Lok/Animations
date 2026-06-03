@@ -31,6 +31,13 @@ import { categories } from "../data/terms";
     <p class="catnav__empty" id="search-empty" hidden>
       No patterns match <span></span>.
     </p>
+    <p class="catnav__hint">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+        <path d="m13 13 6 6"></path>
+      </svg>
+      <span>Hover any card to play its animation on a loop — no clicking required.</span>
+    </p>
   </div>
 </aside>
 
@@ -86,15 +93,15 @@ import { categories } from "../data/terms";
     gap: 1px;
   }
   .catnav__item {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 10px;
-    border-radius: 8px;
+    padding: 9px 12px;
+    border-radius: 9px;
     text-decoration: none;
     color: var(--color-muted-ash);
-    border-left: 2px solid transparent;
-    transition: color 0.15s ease, background 0.15s ease, border-color 0.2s ease;
+    transition: color 0.18s ease, background 0.18s ease, box-shadow 0.25s ease;
   }
   .catnav__item:hover {
     color: var(--color-midnight-ink);
@@ -105,12 +112,14 @@ import { categories } from "../data/terms";
     font-variant-numeric: tabular-nums;
     color: var(--color-muted-ash);
     opacity: 0.7;
+    transition: color 0.18s ease, opacity 0.18s ease;
   }
   .catnav__label {
     flex: 1;
     font-size: 13.5px;
     font-weight: 500;
     line-height: 1.2;
+    transition: font-weight 0.18s ease;
   }
   .catnav__count {
     font-size: 11px;
@@ -120,20 +129,27 @@ import { categories } from "../data/terms";
     border-radius: 999px;
     padding: 2px 7px;
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.18s ease, color 0.18s ease, background 0.18s ease;
   }
   .catnav__item:hover .catnav__count,
   .catnav__item.is-active .catnav__count {
     opacity: 1;
   }
   .catnav__item.is-active {
-    color: var(--color-midnight-ink);
-    background: var(--color-whisper-gray);
-    border-left-color: var(--color-phoenix-orange);
+    color: var(--color-canvas-white);
+    background: var(--color-midnight-ink);
+    box-shadow: var(--shadow-interactive);
+  }
+  .catnav__item.is-active .catnav__label {
+    font-weight: 600;
   }
   .catnav__item.is-active .catnav__num {
-    color: var(--color-phoenix-orange);
-    opacity: 1;
+    color: var(--color-canvas-white);
+    opacity: 0.55;
+  }
+  .catnav__item.is-active .catnav__count {
+    color: var(--color-canvas-white);
+    background: rgba(255, 255, 255, 0.16);
   }
   .catnav__empty {
     font-size: 13px;
@@ -143,6 +159,24 @@ import { categories } from "../data/terms";
   .catnav__empty span {
     color: var(--color-midnight-ink);
     font-weight: 500;
+  }
+  .catnav__hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--color-muted-ash);
+    background: var(--color-whisper-gray);
+    border: 1px solid var(--border-hairline);
+    border-radius: 10px;
+  }
+  .catnav__hint svg {
+    flex: none;
+    margin-top: 1px;
+    color: var(--color-phoenix-orange);
   }
   @media (max-width: 900px) {
     .catnav {

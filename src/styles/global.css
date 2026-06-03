@@ -224,12 +224,6 @@ anim-playground {
   color: var(--color-midnight-ink);
   background: var(--color-light-taupe);
 }
-.pg-btn.is-hidden {
-  display: none;
-}
-.pg-replay svg {
-  opacity: 0.7;
-}
 
 .pg-controls {
   display: grid;
