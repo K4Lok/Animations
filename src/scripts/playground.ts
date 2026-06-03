@@ -6,6 +6,16 @@ interface PlaygroundConfig {
   controls: ControlSpec[];
 }
 
+interface PlaygroundI18n {
+  code: string;
+  unavailable: string;
+  noSnippet: string;
+}
+
+const I18N: PlaygroundI18n = (
+  typeof window !== "undefined" ? (window as unknown as { __PG_I18N__?: PlaygroundI18n }).__PG_I18N__ : undefined
+) ?? { code: "Code", unavailable: "Demo unavailable", noSnippet: "// No snippet for this demo." };
+
 class AnimPlayground extends HTMLElement {
   private instance: DemoInstance | null = null;
   private controls: ControlSpec[] = [];
@@ -72,7 +82,7 @@ class AnimPlayground extends HTMLElement {
     const toolbar = el("div", "pg-toolbar");
     const codeToggle = el("button", "pg-btn pg-ghost pg-code-toggle") as HTMLButtonElement;
     codeToggle.type = "button";
-    codeToggle.textContent = "Code";
+    codeToggle.textContent = I18N.code;
     codeToggle.addEventListener("click", () => {
       const open = this.codeWrap.classList.toggle("is-open");
       codeToggle.classList.toggle("is-active", open);
@@ -167,7 +177,7 @@ class AnimPlayground extends HTMLElement {
     const factory = await loadDemo(id);
     if (!factory) {
       this.stage.classList.add("pg-stage--error");
-      this.stage.textContent = "Demo unavailable";
+      this.stage.textContent = I18N.unavailable;
       return;
     }
     this.instance = factory(this.stage);
@@ -213,7 +223,7 @@ class AnimPlayground extends HTMLElement {
 
   private updateCode() {
     if (!this.instance?.code) {
-      this.codePanel.textContent = "// No snippet for this demo.";
+      this.codePanel.textContent = I18N.noSnippet;
       return;
     }
     this.codePanel.textContent = this.instance.code(this.collectParams());

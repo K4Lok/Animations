@@ -1,0 +1,46 @@
+---
+import Header from "./Header.astro";
+import Hero from "./Hero.astro";
+import CategoryNav from "./CategoryNav.astro";
+import CategorySection from "./CategorySection.astro";
+import Footer from "./Footer.astro";
+import { resolveLocale } from "../i18n/config";
+import { localizeCategories } from "../i18n/content";
+
+const locale = resolveLocale(Astro.currentLocale);
+const categories = localizeCategories(locale);
+---
+
+<Header />
+<Hero />
+<div class="layout" id="glossary">
+  <main class="glossary">
+    {categories.map((category, i) => <CategorySection category={category} index={i} />)}
+  </main>
+  <CategoryNav />
+</div>
+<Footer />
+
+<style>
+  .layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 56px clamp(24px, 4vw, 64px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 244px;
+    gap: clamp(32px, 4vw, 56px);
+    align-items: start;
+  }
+  .glossary {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

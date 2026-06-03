@@ -1,12 +1,29 @@
 ---
+import { LOCALES, localeMeta, localizedPath, resolveLocale } from "../i18n/config";
+import { t } from "../i18n/ui";
+
+const locale = resolveLocale(Astro.currentLocale);
+const ui = t(locale);
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="logo" href="#top" aria-label="Animation Vocabulary home">
+    <a class="logo" href="#top" aria-label={ui.homeAria}>
       <span class="logo__mark" aria-hidden="true"></span>
-      <span class="logo__word">Animation<span class="logo__dim">Vocabulary</span></span>
+      <span class="logo__word">{ui.brandWord}<span class="logo__dim">{ui.brandDim}</span></span>
     </a>
+    <div class="langswitch">
+      <label class="langswitch__label" for="lang-select">{ui.langLabel}</label>
+      <select id="lang-select" class="langswitch__select" aria-label={ui.langLabel}>
+        {
+          LOCALES.map((loc) => (
+            <option value={localizedPath(loc, "/")} selected={loc === locale}>
+              {localeMeta[loc].label}
+            </option>
+          ))
+        }
+      </select>
+    </div>
   </div>
 </header>
 
@@ -36,6 +53,38 @@
     align-items: center;
     gap: 24px;
     padding: 12px clamp(16px, 2vw, 28px);
+  }
+  .langswitch {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .langswitch__label {
+    font-size: 12px;
+    color: var(--color-muted-ash);
+  }
+  .langswitch__select {
+    appearance: none;
+    font: inherit;
+    font-size: 13px;
+    color: var(--color-midnight-ink);
+    background: var(--color-canvas-white);
+    border: 1px solid var(--border-hairline);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .langswitch__select:hover,
+  .langswitch__select:focus-visible {
+    border-color: var(--color-midnight-ink);
+    outline: none;
+  }
+  @media (max-width: 560px) {
+    .langswitch__label {
+      display: none;
+    }
   }
   .logo {
     display: inline-flex;
@@ -107,6 +156,11 @@
 </style>
 
 <script>
+  const langSelect = document.getElementById("lang-select") as HTMLSelectElement | null;
+  langSelect?.addEventListener("change", () => {
+    if (langSelect.value) window.location.assign(langSelect.value);
+  });
+
   const header = document.querySelector<HTMLElement>(".site-header");
   const glossary = document.getElementById("glossary");
 

@@ -1,11 +1,16 @@
 ---
+import { resolveLocale } from "../i18n/config";
+import { t } from "../i18n/ui";
+
+const locale = resolveLocale(Astro.currentLocale);
+const ui = t(locale);
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <a class="logo" href="#top">Animation <span class="logo__dim">Vocabulary</span></a>
+    <a class="logo" href="#top">{ui.brandWord} <span class="logo__dim">{ui.brandDim}</span></a>
     <p>
-      An interactive showcase of common animation patterns. Inspired by
+      {ui.footerTagline} {ui.footerInspired}
       <a href="https://animations.dev" target="_blank" rel="noopener noreferrer">Emil Kowalski</a>.
     </p>
   </div>

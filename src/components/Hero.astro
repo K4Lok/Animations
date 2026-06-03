@@ -1,7 +1,13 @@
 ---
-import { categories } from "../data/terms";
+import { resolveLocale } from "../i18n/config";
+import { t } from "../i18n/ui";
+import { localizeCategories } from "../i18n/content";
 
+const locale = resolveLocale(Astro.currentLocale);
+const ui = t(locale);
+const categories = localizeCategories(locale);
 const termCount = categories.reduce((n, c) => n + c.terms.length, 0);
+const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
 ---
 
 <section class="hero" id="top">
@@ -10,14 +16,11 @@ const termCount = categories.reduce((n, c) => n + c.terms.length, 0);
     <span class="hero__blob hero__blob--2 gradient-cyan"></span>
   </div>
   <div class="hero__inner">
-    <span class="hero__eyebrow">Animation glossary · {termCount} patterns</span>
-    <h1 class="hero__title">Animation Vocabulary</h1>
-    <p class="hero__lede">
-      A glossary of common animation patterns. Use these names to describe what you want
-      when prompting an AI — and tweak each one live to feel how it moves.
-    </p>
+    <span class="hero__eyebrow">{eyebrow}</span>
+    <h1 class="hero__title">{ui.heroTitle}</h1>
+    <p class="hero__lede">{ui.heroLede}</p>
     <div class="hero__cta">
-      <a class="btn btn--dark" href="#glossary">Explore the glossary</a>
+      <a class="btn btn--dark" href="#glossary">{ui.heroCta}</a>
     </div>
   </div>
 </section>

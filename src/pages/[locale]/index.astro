@@ -1,0 +1,15 @@
+---
+import Base from "../../layouts/Base.astro";
+import Page from "../../components/Page.astro";
+import { LOCALES, DEFAULT_LOCALE } from "../../i18n/config";
+
+export function getStaticPaths() {
+  return LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map((locale) => ({
+    params: { locale },
+  }));
+}
+---
+
+<Base>
+  <Page />
+</Base>

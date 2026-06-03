@@ -1,26 +1,104 @@
 ---
 import "../styles/global.css";
+import {
+  SITE,
+  LOCALES,
+  DEFAULT_LOCALE,
+  localeMeta,
+  localeUrl,
+  resolveLocale,
+} from "../i18n/config";
+import { t } from "../i18n/ui";
+import { localizeCategories } from "../i18n/content";
 
-interface Props {
-  title?: string;
-  description?: string;
-}
+const locale = resolveLocale(Astro.currentLocale);
+const meta = localeMeta[locale];
+const ui = t(locale);
+const categories = localizeCategories(locale);
 
-const {
-  title = "Animation Vocabulary",
-  description = "A glossary of common animation patterns — with a live, adjustable demo for every term.",
-} = Astro.props;
+const canonical = localeUrl(locale, "/");
+const ogImage = `${SITE}/favicon.svg`;
+
+// hreflang alternates for every locale + an x-default pointing at the root (en).
+const alternates = LOCALES.map((loc) => ({
+  hreflang: localeMeta[loc].hreflang,
+  href: localeUrl(loc, "/"),
+}));
+
+// JSON-LD glossary: a DefinedTermSet whose members are every animation term.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "@id": canonical,
+  name: ui.metaTitle,
+  description: ui.metaDescription,
+  url: canonical,
+  inLanguage: meta.htmlLang,
+  hasDefinedTerm: categories.flatMap((cat) =>
+    cat.terms.map((term) => ({
+      "@type": "DefinedTerm",
+      name: term.name,
+      description: term.blurb,
+      inDefinedTermSet: canonical,
+      termCode: term.id,
+    }))
+  ),
+};
+
+// Client strings the playground web component renders after hydration.
+const pgI18n = {
+  code: ui.pgCode,
+  unavailable: ui.pgUnavailable,
+  noSnippet: ui.pgNoSnippet,
+};
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={meta.htmlLang} dir={meta.dir}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{ui.metaTitle}</title>
+    <meta name="description" content={ui.metaDescription} />
+    <link rel="canonical" href={canonical} />
+    {
+      alternates.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={localeUrl(DEFAULT_LOCALE, "/")} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Animation Vocabulary" />
+    <meta property="og:title" content={ui.metaTitle} />
+    <meta property="og:description" content={ui.metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    {
+      LOCALES.filter((loc) => loc !== locale).map((loc) => (
+        <meta property="og:locale:alternate" content={localeMeta[loc].ogLocale} />
+      ))
+    }
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ui.metaTitle} />
+    <meta name="twitter:description" content={ui.metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jsonLd)}
+    />
+    <script
+      is:inline
+      define:vars={{ pgI18n }}
+    >
+      window.__PG_I18N__ = pgI18n;
+    </script>
   </head>
   <body>
     <slot />

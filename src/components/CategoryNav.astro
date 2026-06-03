@@ -1,8 +1,15 @@
 ---
-import { categories } from "../data/terms";
+import { resolveLocale } from "../i18n/config";
+import { t } from "../i18n/ui";
+import { localizeCategories } from "../i18n/content";
+
+const locale = resolveLocale(Astro.currentLocale);
+const ui = t(locale);
+const categories = localizeCategories(locale);
+const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
 ---
 
-<aside class="catnav" aria-label="Categories">
+<aside class="catnav" aria-label={ui.navCategoriesAria}>
   <div class="catnav__inner">
     <div class="catnav__search">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -11,13 +18,13 @@ import { categories } from "../data/terms";
       <input
         type="search"
         id="term-search"
-        placeholder="Search patterns…"
+        placeholder={ui.navSearchPlaceholder}
         autocomplete="off"
-        aria-label="Search animation patterns"
+        aria-label={ui.navSearchAria}
       />
     </div>
-    <nav class="catnav__list" aria-label="Jump to category">
-      <p class="catnav__heading">On this page</p>
+    <nav class="catnav__list" aria-label={ui.navJumpAria}>
+      <p class="catnav__heading">{ui.navOnThisPage}</p>
       {
         categories.map((c, i) => (
           <a class="catnav__item" href={`#${c.id}`} data-pill={c.id}>
@@ -29,14 +36,14 @@ import { categories } from "../data/terms";
       }
     </nav>
     <p class="catnav__empty" id="search-empty" hidden>
-      No patterns match <span></span>.
+      {noMatchPre}<span></span>{noMatchPost}
     </p>
     <p class="catnav__hint">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
         <path d="m13 13 6 6"></path>
       </svg>
-      <span>Hover any card to play its animation on a loop — no clicking required.</span>
+      <span>{ui.navHint}</span>
     </p>
   </div>
 </aside>
