@@ -24,7 +24,7 @@
       border-color 0.35s ease;
   }
   /* Once the glossary scrolls under the header the chrome melts away and the
-     brand slides out of the centred column to the far-left gutter, floating
+     brand pops out of the centred column to the far-left gutter, floating
      over the content. */
   .site-header--pinned {
     background: transparent;
@@ -32,16 +32,12 @@
     border-bottom-color: transparent;
   }
   .site-header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: 24px;
     padding: 12px 24px;
-    /* At rest the logo lines up with the 1200px centred hero column. */
-    padding-left: max(24px, calc((100vw - 1200px) / 2 + 24px));
-    transition: padding-left 0.4s ease;
-  }
-  .site-header--pinned .site-header__inner {
-    padding-left: clamp(20px, 3vw, 40px);
   }
   .logo {
     display: inline-flex;
@@ -52,6 +48,25 @@
     font-weight: 700;
     font-size: 16px;
     letter-spacing: -0.2px;
+  }
+  /* Float the brand against the very left edge of the viewport, outside the
+     centred column and the main container's padding. */
+  .site-header--pinned .logo {
+    position: fixed;
+    top: 13px;
+    left: clamp(16px, 2vw, 28px);
+    z-index: 60;
+    animation: brand-slide-in 0.4s ease;
+  }
+  @keyframes brand-slide-in {
+    from {
+      transform: translateX(-12px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
   .logo__mark {
     width: 22px;
