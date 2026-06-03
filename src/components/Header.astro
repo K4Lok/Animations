@@ -7,9 +7,6 @@
       <span class="logo__mark" aria-hidden="true"></span>
       <span class="logo__word">Animation <span class="logo__dim">Vocabulary</span></span>
     </a>
-    <nav class="site-header__nav" aria-label="Primary">
-      <a class="nav-link" href="#glossary">Glossary</a>
-    </nav>
   </div>
 </header>
 
@@ -21,14 +18,30 @@
     background: color-mix(in srgb, var(--color-canvas-white) 82%, transparent);
     backdrop-filter: saturate(180%) blur(12px);
     border-bottom: 1px solid var(--border-hairline);
+    transition:
+      background 0.35s ease,
+      backdrop-filter 0.35s ease,
+      border-color 0.35s ease;
+  }
+  /* Once the glossary scrolls under the header the chrome melts away and the
+     brand slides out of the centred column to the far-left gutter, floating
+     over the content. */
+  .site-header--pinned {
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom-color: transparent;
   }
   .site-header__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 24px;
     display: flex;
     align-items: center;
     gap: 24px;
+    padding: 12px 24px;
+    /* At rest the logo lines up with the 1200px centred hero column. */
+    padding-left: max(24px, calc((100vw - 1200px) / 2 + 24px));
+    transition: padding-left 0.4s ease;
+  }
+  .site-header--pinned .site-header__inner {
+    padding-left: clamp(20px, 3vw, 40px);
   }
   .logo {
     display: inline-flex;
@@ -70,27 +83,27 @@
     color: var(--color-muted-ash);
     font-weight: 500;
   }
-  .site-header__nav {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-  }
-  .nav-link {
-    padding: 6px 14px;
-    border-radius: 8px;
-    color: var(--color-muted-ash);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: color 0.15s ease, background 0.15s ease;
-  }
-  .nav-link:hover {
-    color: var(--color-midnight-ink);
-    background: var(--color-whisper-gray);
-  }
-  @media (max-width: 640px) {
-    .site-header__nav {
-      display: none;
-    }
-  }
 </style>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const glossary = document.getElementById("glossary");
+
+  let ticking = false;
+  const update = () => {
+    const trigger = glossary ? glossary.offsetTop - 64 : 200;
+    header?.classList.toggle("site-header--pinned", window.scrollY >= trigger);
+    ticking = false;
+  };
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+  window.addEventListener("resize", update, { passive: true });
+  update();
+</script>
