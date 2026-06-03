@@ -188,6 +188,16 @@ const ui = t(locale);
   .langswitch__option.is-active .langswitch__check {
     opacity: 1;
   }
+  /* On mobile the brand never floats out (its margin is already 0), so keep the
+     header chrome when pinned — that way it reads as one piece with the TOC bar
+     that docks directly beneath it. */
+  @media (max-width: 900px) {
+    .site-header--pinned {
+      background: color-mix(in srgb, var(--color-canvas-white) 82%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom-color: var(--border-hairline);
+    }
+  }
   @media (max-width: 640px) {
     .site-header__inner {
       padding: 10px 16px;

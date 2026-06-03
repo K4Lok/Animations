@@ -18,6 +18,7 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
       <input
         type="search"
         id="term-search"
+        class="js-term-search"
         placeholder={ui.navSearchPlaceholder}
         autocomplete="off"
         aria-label={ui.navSearchAria}
@@ -35,7 +36,7 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
         ))
       }
     </nav>
-    <p class="catnav__empty" id="search-empty" hidden>
+    <p class="catnav__empty js-search-empty" hidden>
       {noMatchPre}<span></span>{noMatchPost}
     </p>
     <p class="catnav__hint">
@@ -47,6 +48,62 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     </p>
   </div>
 </aside>
+
+<!-- Mobile floating TOC: a bar that slides in under the navbar once the
+     glossary is in view, showing the active category and expanding to the
+     full list on tap (fumadocs-style). -->
+<div class="mtoc" data-mtoc>
+  <button
+    type="button"
+    class="mtoc__bar"
+    aria-expanded="false"
+    aria-controls="mtoc-panel"
+    aria-label={ui.navJumpAria}
+  >
+    <span class="mtoc__progress" aria-hidden="true">
+      <svg class="mtoc__ring" viewBox="0 0 30 30">
+        <circle class="mtoc__ring-track" cx="15" cy="15" r="13"></circle>
+        <circle class="mtoc__ring-fill" cx="15" cy="15" r="13"></circle>
+      </svg>
+      <span class="mtoc__count-num">1</span>
+    </span>
+    <span class="mtoc__current">{categories[0]?.title}</span>
+    <svg class="mtoc__chevron" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9l6 6 6-6"></path>
+    </svg>
+  </button>
+  <div class="mtoc__panel" id="mtoc-panel">
+    <div class="mtoc__panel-inner">
+      <div class="catnav__search mtoc__search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input
+          type="search"
+          class="js-term-search"
+          placeholder={ui.navSearchPlaceholder}
+          autocomplete="off"
+          aria-label={ui.navSearchAria}
+        />
+      </div>
+      <nav class="mtoc__list" aria-label={ui.navJumpAria}>
+        {
+          categories.map((c, i) => (
+            <a class="mtoc__item" href={`#${c.id}`} data-pill={c.id}>
+              <span class="mtoc__num">{String(i + 1).padStart(2, "0")}</span>
+              <span class="mtoc__label">{c.title}</span>
+              <span class="mtoc__count">{c.terms.length}</span>
+            </a>
+          ))
+        }
+      </nav>
+      <p class="mtoc__empty js-search-empty" hidden>
+        {noMatchPre}<span></span>{noMatchPost}
+      </p>
+    </div>
+  </div>
+  <div class="mtoc__backdrop" data-mtoc-backdrop></div>
+</div>
 
 <style>
   .catnav {
@@ -83,6 +140,7 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     font-size: 14px;
     color: var(--color-midnight-ink);
     width: 100%;
+    min-width: 0;
   }
   .catnav__heading {
     font-size: 11px;
@@ -185,33 +243,232 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     margin-top: 1px;
     color: var(--color-phoenix-orange);
   }
+
+  /* ----- Mobile floating TOC (hidden on desktop) ----- */
+  .mtoc {
+    display: none;
+  }
+
   @media (max-width: 900px) {
+    /* Replace the sidebar with the floating bar on small screens. */
     .catnav {
-      position: static;
-      margin-bottom: 32px;
-      order: -1;
-    }
-    .catnav__list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 4px;
-    }
-    .catnav__heading {
       display: none;
+    }
+    .mtoc {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: var(--mtoc-top, 56px);
+      z-index: 40;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .mtoc.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .mtoc__bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 11px 20px;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      color: var(--color-midnight-ink);
+      background: color-mix(in srgb, var(--color-canvas-white) 82%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      border: 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .mtoc__progress {
+      position: relative;
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+    }
+    .mtoc__ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .mtoc__ring-track {
+      fill: none;
+      stroke: var(--color-light-taupe);
+      stroke-width: 2.5;
+    }
+    .mtoc__ring-fill {
+      fill: none;
+      stroke: var(--color-midnight-ink);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-dasharray: 81.68;
+      stroke-dashoffset: 81.68;
+      transition: stroke-dashoffset 0.2s ease;
+    }
+    .mtoc__count-num {
+      position: relative;
+      font-size: 11px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-midnight-ink);
+    }
+    .mtoc__current {
+      flex: 1;
+      min-width: 0;
+      font-size: 13.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mtoc__chevron {
+      flex: none;
+      width: 16px;
+      height: 16px;
+      color: var(--color-muted-ash);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mtoc.is-open .mtoc__chevron {
+      transform: rotate(180deg);
+    }
+    .mtoc__panel {
+      position: relative;
+      z-index: 1;
+      background: var(--color-canvas-white);
+      border-bottom: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-floating);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mtoc.is-open .mtoc__panel {
+      max-height: min(70vh, 460px);
+      overflow-y: auto;
+    }
+    .mtoc__panel-inner {
+      padding: 12px 12px 14px;
+    }
+    .mtoc__search {
+      margin-bottom: 8px;
+    }
+    .mtoc__list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .mtoc__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--color-muted-ash);
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .mtoc__item:hover {
+      color: var(--color-midnight-ink);
+      background: var(--color-whisper-gray);
+    }
+    .mtoc__num {
+      flex: none;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-muted-ash);
+      opacity: 0.7;
+    }
+    .mtoc__label {
+      flex: 1;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .mtoc__count {
+      flex: none;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-muted-ash);
+      background: var(--color-light-taupe);
+      border-radius: 999px;
+      padding: 2px 7px;
+    }
+    .mtoc__item.is-active {
+      color: var(--color-midnight-ink);
+      background: var(--color-light-taupe);
+    }
+    .mtoc__item.is-active .mtoc__label {
+      font-weight: 600;
+    }
+    .mtoc__item.is-active .mtoc__num {
+      color: var(--color-midnight-ink);
+      opacity: 1;
+    }
+    .mtoc__item.is-active .mtoc__count {
+      color: var(--color-midnight-ink);
+      background: var(--color-canvas-white);
+    }
+    .mtoc__empty {
+      font-size: 13px;
+      color: var(--color-muted-ash);
+      padding: 8px 12px 4px;
+    }
+    .mtoc__empty span {
+      color: var(--color-midnight-ink);
+      font-weight: 500;
+    }
+    .mtoc__backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(20, 20, 19, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .mtoc.is-open .mtoc__backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mtoc,
+    .mtoc__chevron,
+    .mtoc__panel,
+    .mtoc__backdrop,
+    .mtoc__ring-fill {
+      transition: none;
     }
   }
 </style>
 
 <script>
-  const search = document.getElementById("term-search") as HTMLInputElement | null;
-  const empty = document.getElementById("search-empty");
   const cards = Array.from(document.querySelectorAll<HTMLElement>(".term-card"));
   const sections = Array.from(document.querySelectorAll<HTMLElement>(".cat"));
-  const items = Array.from(document.querySelectorAll<HTMLAnchorElement>(".catnav__item"));
+  const desktopItems = Array.from(document.querySelectorAll<HTMLAnchorElement>(".catnav__item"));
+  const mobileItems = Array.from(document.querySelectorAll<HTMLAnchorElement>(".mtoc__item"));
+  const navItems = [...desktopItems, ...mobileItems];
 
-  // Live search filter
-  search?.addEventListener("input", () => {
-    const q = search.value.trim().toLowerCase();
+  // Live search — drive every input that carries .js-term-search and mirror
+  // their values so the desktop sidebar and the mobile popover stay in sync.
+  const searchInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".js-term-search"));
+  const emptyEls = Array.from(document.querySelectorAll<HTMLElement>(".js-search-empty"));
+
+  const runSearch = (value: string) => {
+    const q = value.trim().toLowerCase();
     let anyVisible = false;
     for (const card of cards) {
       const hay = (card.dataset.term ?? "") + " " + (card.textContent ?? "").toLowerCase();
@@ -225,36 +482,74 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
       ).length;
       section.style.display = visible === 0 && q !== "" ? "none" : "";
     }
-    if (empty) {
-      empty.hidden = anyVisible || q === "";
-      const span = empty.querySelector("span");
-      if (span) span.textContent = `“${search.value.trim()}”`;
+    for (const input of searchInputs) {
+      if (input.value !== value) input.value = value;
     }
-  });
+    const label = `“${value.trim()}”`;
+    for (const el of emptyEls) {
+      el.hidden = anyVisible || q === "";
+      const span = el.querySelector("span");
+      if (span) span.textContent = label;
+    }
+    computeActive();
+  };
 
-  // Smooth-scroll a category section into view on click
-  for (const item of items) {
-    item.addEventListener("click", (e) => {
-      const id = item.dataset.pill;
-      const target = id ? document.getElementById(id) : null;
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-      history.replaceState(null, "", `#${id}`);
-      items.forEach((p) => p.classList.remove("is-active"));
-      item.classList.add("is-active");
-    });
+  for (const input of searchInputs) {
+    input.addEventListener("input", () => runSearch(input.value));
   }
 
-  // Scrollspy: highlight the item for the section nearest the top of the viewport
-  const byId = new Map(items.map((p) => [p.dataset.pill, p]));
+  // Mobile popover plumbing
+  const mtoc = document.querySelector<HTMLElement>("[data-mtoc]");
+  const mtocBar = mtoc?.querySelector<HTMLButtonElement>(".mtoc__bar") ?? null;
+  const mtocPanel = document.getElementById("mtoc-panel");
+  const mtocBackdrop = mtoc?.querySelector<HTMLElement>("[data-mtoc-backdrop]") ?? null;
+  const mtocNum = mtoc?.querySelector<HTMLElement>(".mtoc__count-num") ?? null;
+  const mtocCurrent = mtoc?.querySelector<HTMLElement>(".mtoc__current") ?? null;
+  const ringFill = mtoc?.querySelector<SVGCircleElement>(".mtoc__ring-fill") ?? null;
+  const RING_CIRC = 2 * Math.PI * 13; // r=13 in the 30×30 viewBox
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const glossary = document.getElementById("glossary");
+
+  const order = mobileItems.map((el) => el.dataset.pill ?? "");
+  const titleById = new Map(
+    mobileItems.map((el) => [el.dataset.pill ?? "", el.querySelector(".mtoc__label")?.textContent ?? ""])
+  );
+
+  let mtocOpen = false;
+  const setMtocOpen = (open: boolean) => {
+    if (!mtoc) return;
+    mtocOpen = open;
+    mtoc.classList.toggle("is-open", open);
+    mtocBar?.setAttribute("aria-expanded", String(open));
+    if (mtocPanel) (mtocPanel as HTMLElement & { inert: boolean }).inert = !open;
+  };
+
+  mtocBar?.addEventListener("click", () => setMtocOpen(!mtocOpen));
+  mtocBackdrop?.addEventListener("click", () => setMtocOpen(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mtocOpen) setMtocOpen(false);
+  });
+  setMtocOpen(false);
+
+  // Active-section state, shared by the sidebar and the mobile bar.
   let active: string | null = null;
   const setActive = (id: string | null) => {
     if (id === active) return;
     active = id;
-    items.forEach((p) => p.classList.remove("is-active"));
-    if (id) byId.get(id)?.classList.add("is-active");
+    for (const el of desktopItems) el.classList.toggle("is-active", el.dataset.pill === id);
+    for (const el of mobileItems) {
+      const on = el.dataset.pill === id;
+      el.classList.toggle("is-active", on);
+      if (on) el.setAttribute("aria-current", "true");
+      else el.removeAttribute("aria-current");
+    }
+    if (id) {
+      const idx = order.indexOf(id);
+      if (mtocNum && idx >= 0) mtocNum.textContent = String(idx + 1);
+      if (mtocCurrent) mtocCurrent.textContent = titleById.get(id) ?? "";
+    }
   };
+
   const computeActive = () => {
     const line = 120; // px below the viewport top that counts as "current"
     let best: { id: string; top: number } | null = null;
@@ -267,16 +562,54 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     }
     setActive(best?.id ?? firstVisible);
   };
+
+  // Show the mobile bar only while the glossary is the thing on screen.
+  const updateMtoc = () => {
+    if (!mtoc || !glossary) return;
+    const headerH = header ? header.offsetHeight : 56;
+    mtoc.style.setProperty("--mtoc-top", `${headerH}px`);
+    const g = glossary.getBoundingClientRect();
+    const started = g.top < headerH + 8;
+    const ended = g.bottom < headerH + 64;
+    const visible = started && !ended;
+    mtoc.classList.toggle("is-visible", visible);
+    if (!visible && mtocOpen) setMtocOpen(false);
+
+    // Reading progress: 0 when the glossary top reaches the header, 1 when its
+    // bottom reaches the viewport bottom. Drives the ring around the index.
+    if (ringFill) {
+      const span = g.height - (window.innerHeight - headerH);
+      const progress = span <= 0 ? 1 : Math.min(1, Math.max(0, (headerH - g.top) / span));
+      ringFill.style.strokeDashoffset = String(RING_CIRC * (1 - progress));
+    }
+  };
+
+  // Click any nav entry: scroll to the section, close the popover, sync state.
+  for (const item of navItems) {
+    item.addEventListener("click", (e) => {
+      const id = item.dataset.pill;
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      e.preventDefault();
+      setMtocOpen(false);
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", `#${id}`);
+      if (id) setActive(id);
+    });
+  }
+
   let ticking = false;
   const onScroll = () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
       computeActive();
+      updateMtoc();
       ticking = false;
     });
   };
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
   computeActive();
+  updateMtoc();
 </script>

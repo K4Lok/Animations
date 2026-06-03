@@ -23,6 +23,9 @@ const { term } = Astro.props;
   .term-card {
     position: relative;
     display: flex;
+    /* Grid item: allow it to shrink below the demos' intrinsic width so wide
+       fixed-size demos clip inside the stage instead of overflowing the page. */
+    min-width: 0;
     border-radius: 14px;
     padding: 1px;
     /* A warm beige shine rides the border, following the cursor via --x/--y.
@@ -49,6 +52,7 @@ const { term } = Astro.props;
   .term-card__inner {
     position: relative;
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 16px;

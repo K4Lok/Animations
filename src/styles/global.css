@@ -126,6 +126,7 @@ anim-playground {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 .pg-stage {
@@ -189,6 +190,7 @@ anim-playground {
 .pg-toolbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
 }
 .pg-btn {
