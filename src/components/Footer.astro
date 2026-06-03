@@ -49,10 +49,15 @@ const ui = t(locale);
     color: var(--color-muted-ash);
     font-weight: 500;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
+    .site-footer {
+      margin-top: 64px;
+    }
     .site-footer__inner {
       flex-direction: column;
-      text-align: center;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 28px 20px;
     }
   }
 </style>

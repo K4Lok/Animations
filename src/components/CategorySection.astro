@@ -58,4 +58,18 @@ const num = String(index + 1).padStart(2, "0");
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
   }
+  @media (max-width: 640px) {
+    .cat__head {
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .cat__title {
+      font-size: 23px;
+    }
+    /* Below 300px-wide cards the auto-fill track overflows; pin to one column. */
+    .cat__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
 </style>

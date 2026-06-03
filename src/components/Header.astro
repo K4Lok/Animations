@@ -188,6 +188,18 @@ const ui = t(locale);
   .langswitch__option.is-active .langswitch__check {
     opacity: 1;
   }
+  @media (max-width: 640px) {
+    .site-header__inner {
+      padding: 10px 16px;
+      gap: 12px;
+    }
+    .logo {
+      font-size: 15px;
+    }
+    .langswitch__trigger {
+      padding: 6px 10px;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .langswitch__chevron,
     .langswitch__menu {

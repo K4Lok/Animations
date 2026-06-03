@@ -9,7 +9,7 @@ export interface UIStrings {
   heroEyebrow: string;
   heroLede: string;
   heroCta: string;
-  /** Logo wordmark — kept as the English brand across locales. */
+  /** Logo wordmark: "Animation" stays English; the dim half is localized. */
   brandWord: string;
   brandDim: string;
   homeAria: string;
@@ -66,7 +66,7 @@ export const ui: Record<Locale, UIStrings> = {
       "常見動畫模式的詞彙表。用這些名稱向 AI 描述你想要的效果，並即時調整每個示範，感受它如何運動。",
     heroCta: "瀏覽詞彙表",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "詞彙",
     homeAria: "Animation Vocabulary 首頁",
     langLabel: "語言",
     navSearchPlaceholder: "搜尋模式…",
@@ -92,7 +92,7 @@ export const ui: Record<Locale, UIStrings> = {
       "よく使われるアニメーションパターンの用語集。これらの名前を使えば、AI に求める動きを伝えられます。各デモをその場で調整して、動きを体感しましょう。",
     heroCta: "用語集を見る",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "用語集",
     homeAria: "Animation Vocabulary ホーム",
     langLabel: "言語",
     navSearchPlaceholder: "パターンを検索…",
@@ -118,7 +118,7 @@ export const ui: Record<Locale, UIStrings> = {
       "자주 쓰는 애니메이션 패턴 용어집. 이 이름들을 사용해 AI에게 원하는 움직임을 설명하고, 각 데모를 실시간으로 조절하며 움직임을 느껴보세요.",
     heroCta: "용어집 살펴보기",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "용어집",
     homeAria: "Animation Vocabulary 홈",
     langLabel: "언어",
     navSearchPlaceholder: "패턴 검색…",
@@ -144,7 +144,7 @@ export const ui: Record<Locale, UIStrings> = {
       "Um glossário de padrões de animação comuns. Use esses nomes para descrever o que você quer ao conversar com uma IA — e ajuste cada um ao vivo para sentir como ele se move.",
     heroCta: "Explorar o glossário",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "Vocabulário",
     homeAria: "Página inicial do Animation Vocabulary",
     langLabel: "Idioma",
     navSearchPlaceholder: "Buscar padrões…",
@@ -170,7 +170,7 @@ export const ui: Record<Locale, UIStrings> = {
       "Un glosario de patrones de animación comunes. Usa estos nombres para describir lo que quieres al darle instrucciones a una IA, y ajusta cada uno en vivo para sentir cómo se mueve.",
     heroCta: "Explorar el glosario",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "Vocabulario",
     homeAria: "Inicio de Animation Vocabulary",
     langLabel: "Idioma",
     navSearchPlaceholder: "Buscar patrones…",
@@ -196,7 +196,7 @@ export const ui: Record<Locale, UIStrings> = {
       "Un glossaire des motifs d'animation courants. Utilisez ces noms pour décrire ce que vous voulez lorsque vous sollicitez une IA, et ajustez chacun en direct pour ressentir son mouvement.",
     heroCta: "Explorer le glossaire",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "Vocabulaire",
     homeAria: "Accueil d'Animation Vocabulary",
     langLabel: "Langue",
     navSearchPlaceholder: "Rechercher des motifs…",
@@ -222,7 +222,7 @@ export const ui: Record<Locale, UIStrings> = {
       "Ein Glossar gängiger Animationsmuster. Verwende diese Namen, um einer KI zu beschreiben, was du willst – und passe jedes Muster live an, um seine Bewegung zu spüren.",
     heroCta: "Glossar erkunden",
     brandWord: "Animation",
-    brandDim: "Vocabulary",
+    brandDim: "Vokabular",
     homeAria: "Animation Vocabulary Startseite",
     langLabel: "Sprache",
     navSearchPlaceholder: "Muster suchen…",
