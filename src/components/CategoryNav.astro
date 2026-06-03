@@ -2,7 +2,7 @@
 import { categories } from "../data/terms";
 ---
 
-<div class="catnav" id="glossary">
+<aside class="catnav" aria-label="Categories">
   <div class="catnav__inner">
     <div class="catnav__search">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -16,49 +16,50 @@ import { categories } from "../data/terms";
         aria-label="Search animation patterns"
       />
     </div>
-    <nav class="catnav__pills" aria-label="Categories">
+    <nav class="catnav__list" aria-label="Jump to category">
+      <p class="catnav__heading">On this page</p>
       {
-        categories.map((c) => (
-          <a class="pill" href={`#${c.id}`} data-pill={c.id}>
-            {c.title}
+        categories.map((c, i) => (
+          <a class="catnav__item" href={`#${c.id}`} data-pill={c.id}>
+            <span class="catnav__num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="catnav__label">{c.title}</span>
+            <span class="catnav__count">{c.terms.length}</span>
           </a>
         ))
       }
     </nav>
+    <p class="catnav__empty" id="search-empty" hidden>
+      No patterns match <span></span>.
+    </p>
   </div>
-  <p class="catnav__empty" id="search-empty" hidden>
-    No patterns match <span></span>.
-  </p>
-</div>
+</aside>
 
 <style>
   .catnav {
     position: sticky;
-    top: 61px;
-    z-index: 40;
-    background: color-mix(in srgb, var(--color-canvas-white) 85%, transparent);
-    backdrop-filter: saturate(180%) blur(12px);
-    border-bottom: 1px solid var(--border-hairline);
+    top: 85px;
+    align-self: start;
   }
   .catnav__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 24px;
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 18px;
   }
   .catnav__search {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex: 0 0 240px;
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 8px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
     border: 1px solid var(--border-hairline);
     background: var(--color-canvas-white);
     color: var(--color-muted-ash);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .catnav__search:focus-within {
+    border-color: var(--color-midnight-ink);
+    box-shadow: var(--shadow-interactive);
   }
   .catnav__search input {
     border: 0;
@@ -69,53 +70,93 @@ import { categories } from "../data/terms";
     color: var(--color-midnight-ink);
     width: 100%;
   }
-  .catnav__pills {
+  .catnav__heading {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--color-muted-ash);
+    padding: 0 10px;
+    margin-bottom: 8px;
+  }
+  .catnav__list {
+    position: relative;
     display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+    flex-direction: column;
+    gap: 1px;
   }
-  .catnav__pills::-webkit-scrollbar {
-    display: none;
-  }
-  .pill {
-    flex: 0 0 auto;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-    white-space: nowrap;
+  .catnav__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
     text-decoration: none;
     color: var(--color-muted-ash);
-    border: 1px solid transparent;
-    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.2s ease;
   }
-  .pill:hover {
+  .catnav__item:hover {
     color: var(--color-midnight-ink);
     background: var(--color-whisper-gray);
   }
-  .pill.is-active {
+  .catnav__num {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-ash);
+    opacity: 0.7;
+  }
+  .catnav__label {
+    flex: 1;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .catnav__count {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-ash);
+    background: var(--color-light-taupe);
+    border-radius: 999px;
+    padding: 2px 7px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .catnav__item:hover .catnav__count,
+  .catnav__item.is-active .catnav__count {
+    opacity: 1;
+  }
+  .catnav__item.is-active {
     color: var(--color-midnight-ink);
-    background: var(--color-canvas-white);
-    border-color: var(--border-hairline);
-    box-shadow: var(--shadow-interactive);
+    background: var(--color-whisper-gray);
+    border-left-color: var(--color-phoenix-orange);
+  }
+  .catnav__item.is-active .catnav__num {
+    color: var(--color-phoenix-orange);
+    opacity: 1;
   }
   .catnav__empty {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 24px;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--color-muted-ash);
+    padding: 0 10px;
   }
   .catnav__empty span {
     color: var(--color-midnight-ink);
     font-weight: 500;
   }
-  @media (max-width: 720px) {
-    .catnav__search {
-      flex-basis: 150px;
+  @media (max-width: 900px) {
+    .catnav {
+      position: static;
+      margin-bottom: 32px;
+      order: -1;
+    }
+    .catnav__list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 4px;
+    }
+    .catnav__heading {
+      display: none;
     }
   }
 </style>
@@ -125,7 +166,7 @@ import { categories } from "../data/terms";
   const empty = document.getElementById("search-empty");
   const cards = Array.from(document.querySelectorAll<HTMLElement>(".term-card"));
   const sections = Array.from(document.querySelectorAll<HTMLElement>(".cat"));
-  const pills = Array.from(document.querySelectorAll<HTMLAnchorElement>(".pill"));
+  const items = Array.from(document.querySelectorAll<HTMLAnchorElement>(".catnav__item"));
 
   // Live search filter
   search?.addEventListener("input", () => {
@@ -137,7 +178,6 @@ import { categories } from "../data/terms";
       card.style.display = match ? "" : "none";
       if (match) anyVisible = true;
     }
-    // Hide sections with no visible cards
     for (const section of sections) {
       const visible = section.querySelectorAll<HTMLElement>(
         '.term-card:not([style*="display: none"])'
@@ -151,32 +191,51 @@ import { categories } from "../data/terms";
     }
   });
 
-  // Smooth-scroll a category section into view on pill click
-  for (const pill of pills) {
-    pill.addEventListener("click", (e) => {
-      const id = pill.dataset.pill;
+  // Smooth-scroll a category section into view on click
+  for (const item of items) {
+    item.addEventListener("click", (e) => {
+      const id = item.dataset.pill;
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
       e.preventDefault();
       target.scrollIntoView({ behavior: "smooth", block: "start" });
       history.replaceState(null, "", `#${id}`);
-      pills.forEach((p) => p.classList.remove("is-active"));
-      pill.classList.add("is-active");
+      items.forEach((p) => p.classList.remove("is-active"));
+      item.classList.add("is-active");
     });
   }
 
-  // Scrollspy: highlight the pill for the section in view
-  const byId = new Map(pills.map((p) => [p.dataset.pill, p]));
-  const spy = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          pills.forEach((p) => p.classList.remove("is-active"));
-          byId.get((e.target as HTMLElement).id)?.classList.add("is-active");
-        }
-      }
-    },
-    { rootMargin: "-45% 0px -50% 0px" }
-  );
-  sections.forEach((s) => spy.observe(s));
+  // Scrollspy: highlight the item for the section nearest the top of the viewport
+  const byId = new Map(items.map((p) => [p.dataset.pill, p]));
+  let active: string | null = null;
+  const setActive = (id: string | null) => {
+    if (id === active) return;
+    active = id;
+    items.forEach((p) => p.classList.remove("is-active"));
+    if (id) byId.get(id)?.classList.add("is-active");
+  };
+  const computeActive = () => {
+    const line = 120; // px below the viewport top that counts as "current"
+    let best: { id: string; top: number } | null = null;
+    let firstVisible: string | null = null;
+    for (const s of sections) {
+      if (s.style.display === "none") continue;
+      if (firstVisible === null) firstVisible = s.id;
+      const top = s.getBoundingClientRect().top - line;
+      if (top <= 0 && (!best || top > best.top)) best = { id: s.id, top };
+    }
+    setActive(best?.id ?? firstVisible);
+  };
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      computeActive();
+      ticking = false;
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  computeActive();
 </script>

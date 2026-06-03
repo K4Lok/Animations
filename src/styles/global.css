@@ -148,12 +148,37 @@ anim-playground {
 .demo-box {
   display: grid;
   place-items: center;
-  background: var(--color-midnight-ink);
   color: var(--color-canvas-white);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.2px;
-  will-change: transform, opacity;
+  background:
+    radial-gradient(120% 120% at 20% 20%, var(--color-phoenix-orange) 0%, transparent 55%),
+    radial-gradient(120% 120% at 80% 30%, var(--color-leadgen-red) 0%, transparent 55%),
+    radial-gradient(120% 120% at 70% 80%, var(--color-midnight-violet) 0%, transparent 55%),
+    radial-gradient(140% 140% at 25% 85%, var(--color-intelligence-blue) 0%, transparent 60%),
+    var(--color-midnight-ink);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: demo-blob 9s ease-in-out infinite;
+  box-shadow: var(--shadow-floating);
+  will-change: transform, opacity, background-position;
+}
+@keyframes demo-blob {
+  0% {
+    background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0;
+  }
+  25% {
+    background-position: 50% 100%, 0% 50%, 50% 0%, 100% 50%, 0 0;
+  }
+  50% {
+    background-position: 100% 100%, 0% 100%, 0% 0%, 100% 0%, 0 0;
+  }
+  75% {
+    background-position: 50% 0%, 100% 50%, 50% 100%, 0% 50%, 0 0;
+  }
+  100% {
+    background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0;
+  }
 }
 .demo-dot {
   border-radius: 999px;
@@ -458,8 +483,12 @@ anim-playground {
 .demo-row.is-dragging {
   cursor: grabbing;
   box-shadow: var(--shadow-xl);
-  position: relative;
-  z-index: 2;
+  z-index: 10;
+}
+.demo-row-placeholder {
+  border: 2px dashed var(--color-light-taupe);
+  border-radius: var(--radius-buttons);
+  background: color-mix(in srgb, var(--color-light-taupe) 22%, transparent);
 }
 
 /* Toast / field -------------------------------------------------- */

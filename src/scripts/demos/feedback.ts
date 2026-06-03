@@ -1,4 +1,4 @@
-import { animate } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory } from "./types";
 import { clearStage, createBox, num } from "./utils";
 
@@ -147,47 +147,81 @@ const drag: DemoFactory = (stage) => {
 const dragReorder: DemoFactory = (stage) => {
   clearStage(stage);
   const list = document.createElement("div");
-  list.style.cssText = "display:flex;flex-direction:column;gap:8px;width:200px";
-  const items = ["Design", "Build", "Ship", "Learn"].map((t, i) => {
+  list.style.cssText = "position:relative;display:flex;flex-direction:column;gap:8px;width:200px";
+  ["Design", "Build", "Ship", "Learn"].forEach((t) => {
     const row = document.createElement("div");
     row.className = "demo-row";
     row.textContent = t;
-    row.dataset.i = String(i);
     list.append(row);
-    return row;
   });
-  stage.append(list);
+  stage.append(list, hint("Drag a row — the dashed slot shows where it lands"));
+
   let dragEl: HTMLElement | null = null;
+  let placeholder: HTMLElement | null = null;
+  let offsetY = 0;
+  const siblingRows = () => [...list.querySelectorAll<HTMLElement>(".demo-row")].filter((r) => r !== dragEl);
+
   list.addEventListener("pointerdown", (e) => {
-    const row = (e.target as HTMLElement).closest(".demo-row") as HTMLElement | null;
-    if (!row) return;
+    const row = (e.target as HTMLElement).closest<HTMLElement>(".demo-row");
+    if (!row || dragEl) return;
+    const rect = row.getBoundingClientRect();
+    offsetY = e.clientY - rect.top;
+    list.setPointerCapture(e.pointerId);
+
+    placeholder = document.createElement("div");
+    placeholder.className = "demo-row-placeholder";
+    placeholder.style.height = `${rect.height}px`;
+    list.insertBefore(placeholder, row);
+
     dragEl = row;
-    row.setPointerCapture(e.pointerId);
     row.classList.add("is-dragging");
+    row.style.position = "fixed";
+    row.style.width = `${rect.width}px`;
+    row.style.left = `${rect.left}px`;
+    row.style.top = `${rect.top}px`;
+    row.style.margin = "0";
+    row.style.pointerEvents = "none";
   });
+
   list.addEventListener("pointermove", (e) => {
-    if (!dragEl) return;
-    const after = [...list.querySelectorAll<HTMLElement>(".demo-row:not(.is-dragging)")].find((el) => {
-      const r = el.getBoundingClientRect();
-      return e.clientY < r.top + r.height / 2;
+    if (!dragEl || !placeholder) return;
+    dragEl.style.top = `${e.clientY - offsetY}px`;
+    const siblings = siblingRows();
+    const after = siblings.find((r) => {
+      const rect = r.getBoundingClientRect();
+      return e.clientY < rect.top + rect.height / 2;
     });
-    const first = items.map((el) => el.getBoundingClientRect());
-    if (after) list.insertBefore(dragEl, after);
-    else list.append(dragEl);
-    items.forEach((el, i) => {
-      const last = el.getBoundingClientRect();
-      const dy = first[i].top - last.top;
-      if (dy && el !== dragEl) animate(el, { y: [dy, 0] }, { type: "spring", stiffness: 500, damping: 36 });
+    const first = siblings.map((r) => r.getBoundingClientRect());
+    if (after) list.insertBefore(placeholder, after);
+    else list.append(placeholder);
+    siblings.forEach((r, i) => {
+      const dy = first[i].top - r.getBoundingClientRect().top;
+      if (dy) animate(r, { y: [dy, 0] }, { type: "spring", stiffness: 600, damping: 40 });
     });
   });
+
   const end = () => {
-    dragEl?.classList.remove("is-dragging");
+    if (!dragEl || !placeholder) return;
+    const el = dragEl;
+    const ph = placeholder;
+    const slot = ph.getBoundingClientRect();
+    animate(el, { top: `${slot.top}px`, left: `${slot.left}px` }, { type: "spring", stiffness: 700, damping: 42 }).then(() => {
+      list.insertBefore(el, ph);
+      ph.remove();
+      el.classList.remove("is-dragging");
+      el.removeAttribute("style");
+    });
     dragEl = null;
+    placeholder = null;
   };
   list.addEventListener("pointerup", end);
   list.addEventListener("pointercancel", end);
-  void void 0;
-  return { play() {}, continuous: true, code: () => `// FLIP the other rows as the dragged item moves\nanimate(other, { y: [delta, 0] }, { type: "spring" });` };
+
+  return {
+    play() {},
+    continuous: true,
+    code: () => `// dashed placeholder marks the drop slot; FLIP the rest\nlist.insertBefore(placeholder, target);\nanimate(other, { y: [delta, 0] }, { type: "spring" });`,
+  };
 };
 
 const swipeDismiss: DemoFactory = (stage) => {

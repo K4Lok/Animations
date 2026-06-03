@@ -1,4 +1,4 @@
-import { animate } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory } from "./types";
 import { clearStage, createBox, num, str } from "./utils";
 
@@ -117,8 +117,10 @@ const originAware: DemoFactory = (stage) => {
   btn.textContent = "Open menu";
   const pop = document.createElement("div");
   pop.style.cssText =
-    "position:absolute;top:42px;width:150px;padding:10px;border-radius:12px;background:#fff;box-shadow:var(--shadow-xl);transform-origin:top center;font-size:12px;color:var(--color-muted-ash)";
-  pop.innerHTML = "<div>Profile</div><div style='margin-top:6px'>Settings</div><div style='margin-top:6px'>Log out</div>";
+    "position:absolute;top:56px;width:220px;padding:8px;border-radius:14px;background:#fff;box-shadow:var(--shadow-xl);transform-origin:top center;font-size:15px;color:var(--color-midnight-ink);z-index:2";
+  const item = (t: string) =>
+    `<div style="padding:10px 12px;border-radius:8px;font-weight:500">${t}</div>`;
+  pop.innerHTML = item("Profile") + item("Settings") + item("Log out");
   wrap.append(btn, pop);
   stage.append(wrap);
   return {

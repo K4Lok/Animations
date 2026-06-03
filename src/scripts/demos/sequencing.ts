@@ -1,4 +1,5 @@
-import { animate, stagger } from "motion";
+import { stagger } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory } from "./types";
 import { clearStage, createBox, EASING_ARRAYS, num, str } from "./utils";
 
@@ -40,7 +41,7 @@ const tween: DemoFactory = (stage) => {
   stage.append(wrap);
   return {
     play(p) {
-      animate(mover, { left: ["0px", "200px"] }, { duration: num(p, "duration", 1), ease: ease(p) });
+      animate(mover, { x: [0, 200] }, { duration: num(p, "duration", 1), ease: ease(p) });
     },
     code: () => `// a tween generates every in-between frame\nanimate(el, { x: [0, 200] }, { duration: 1 });`,
   };

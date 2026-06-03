@@ -1,4 +1,4 @@
-import { animate } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory, Params } from "./types";
 import {
   clearStage,
@@ -97,21 +97,26 @@ const pop: DemoFactory = (stage) => {
   };
 };
 
+const closedClip = (dir: string) =>
+  dir === "left"
+    ? "inset(0 100% 0 0)"
+    : dir === "right"
+      ? "inset(0 0 0 100%)"
+      : dir === "top"
+        ? "inset(0 0 100% 0)"
+        : "inset(100% 0 0 0)";
+
 const reveal: DemoFactory = (stage) => {
   clearStage(stage);
   const box = createBox({ label: "Reveal", size: 120 });
+  // Start fully clipped so the first frame is empty — otherwise the box flashes
+  // fully visible for a moment before the reveal runs.
+  box.style.clipPath = closedClip("left");
   stage.append(box);
   return {
     play(p) {
       const dir = str(p, "direction", "left");
-      const closed =
-        dir === "left"
-          ? "inset(0 100% 0 0)"
-          : dir === "right"
-            ? "inset(0 0 0 100%)"
-            : dir === "top"
-              ? "inset(0 0 100% 0)"
-              : "inset(100% 0 0 0)";
+      const closed = closedClip(dir);
       animate(
         box,
         { clipPath: [closed, "inset(0 0 0 0)"] },

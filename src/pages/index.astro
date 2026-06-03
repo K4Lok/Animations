@@ -11,20 +11,35 @@ import { categories } from "../data/terms";
 <Base>
   <Header />
   <Hero />
-  <CategoryNav />
-  <main class="glossary">
-    {categories.map((category, i) => <CategorySection category={category} index={i} />)}
-  </main>
+  <div class="layout" id="glossary">
+    <main class="glossary">
+      {categories.map((category, i) => <CategorySection category={category} index={i} />)}
+    </main>
+    <CategoryNav />
+  </div>
   <Footer />
 </Base>
 
 <style>
-  .glossary {
-    max-width: 1200px;
+  .layout {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 56px 24px;
+    padding: 56px clamp(24px, 4vw, 64px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 244px;
+    gap: clamp(32px, 4vw, 56px);
+    align-items: start;
+  }
+  .glossary {
     display: flex;
     flex-direction: column;
     gap: 72px;
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
   }
 </style>

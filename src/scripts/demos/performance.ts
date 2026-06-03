@@ -1,4 +1,4 @@
-import { animate } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory } from "./types";
 import { clearStage, bool } from "./utils";
 

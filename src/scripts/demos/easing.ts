@@ -1,4 +1,4 @@
-import { animate } from "motion";
+import { animate } from "./anim";
 import type { DemoFactory, Params } from "./types";
 import { clearStage, createDot, EASING_ARRAYS, num, str } from "./utils";
 
