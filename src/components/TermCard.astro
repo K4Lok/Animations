@@ -1,0 +1,50 @@
+---
+import Playground from "./Playground.astro";
+import type { Term } from "../data/terms";
+
+interface Props {
+  term: Term;
+}
+
+const { term } = Astro.props;
+---
+
+<article class="term-card" id={term.id} data-term={term.name.toLowerCase()}>
+  <div class="term-card__head">
+    <h3 class="term-card__name">{term.name}</h3>
+    <p class="term-card__blurb">{term.blurb}</p>
+  </div>
+  <Playground demo={term.demo} controls={term.controls} />
+</article>
+
+<style>
+  .term-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: var(--color-canvas-white);
+    border-radius: 12px;
+    border: 1px solid var(--border-hairline);
+    box-shadow: var(--shadow-card);
+    scroll-margin-top: 140px;
+  }
+  .term-card__head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .term-card__name {
+    font-size: 20px;
+    line-height: 1.1;
+    letter-spacing: -0.2px;
+    font-weight: 500;
+  }
+  .term-card__blurb {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--color-muted-ash);
+    letter-spacing: 0.1px;
+    max-width: 46ch;
+  }
+</style>

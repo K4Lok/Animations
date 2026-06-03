@@ -1,0 +1,15 @@
+---
+import type { ControlSpec } from "../scripts/demos/types";
+
+interface Props {
+  demo: string;
+  controls?: ControlSpec[];
+}
+
+const { demo, controls = [] } = Astro.props;
+const config = JSON.stringify({ controls });
+---
+
+<anim-playground data-demo={demo}>
+  <script type="application/json" class="pg-config" is:inline set:html={config} />
+</anim-playground>

@@ -1,0 +1,134 @@
+---
+import { categories } from "../data/terms";
+
+const termCount = categories.reduce((n, c) => n + c.terms.length, 0);
+---
+
+<section class="hero" id="top">
+  <div class="hero__bg" aria-hidden="true">
+    <span class="hero__blob hero__blob--1 gradient-phoenix"></span>
+    <span class="hero__blob hero__blob--2 gradient-cyan"></span>
+  </div>
+  <div class="hero__inner">
+    <span class="hero__eyebrow">Animation glossary · {termCount} patterns</span>
+    <h1 class="hero__title">Animation Vocabulary</h1>
+    <p class="hero__lede">
+      A glossary of common animation patterns. Use these names to describe what you want
+      when prompting an AI — and tweak each one live to feel how it moves.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--dark" href="#glossary">Explore the glossary</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    filter: blur(70px) saturate(115%);
+    opacity: 0.55;
+  }
+  .hero__blob {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .hero__blob--1 {
+    width: 520px;
+    height: 520px;
+    top: -220px;
+    left: -120px;
+    animation: drift-1 18s ease-in-out infinite alternate;
+  }
+  .hero__blob--2 {
+    width: 460px;
+    height: 460px;
+    top: -160px;
+    right: -100px;
+    animation: drift-2 22s ease-in-out infinite alternate;
+  }
+  @keyframes drift-1 {
+    to {
+      transform: translate(60px, 40px) scale(1.1);
+    }
+  }
+  @keyframes drift-2 {
+    to {
+      transform: translate(-50px, 50px) scale(1.05);
+    }
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px 24px 72px;
+  }
+  .hero__eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: var(--color-midnight-ink);
+    background: color-mix(in srgb, var(--color-canvas-white) 70%, transparent);
+    border: 1px solid var(--border-hairline);
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .hero__title {
+    font-size: clamp(40px, 9vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    max-width: 14ch;
+  }
+  .hero__lede {
+    margin-top: 20px;
+    max-width: 56ch;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--color-muted-ash);
+  }
+  .hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: opacity 0.15s ease, transform 0.1s ease, background 0.15s ease;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn--dark {
+    background: var(--color-midnight-ink);
+    color: var(--color-canvas-white);
+  }
+  .btn--dark:hover {
+    opacity: 0.88;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__blob {
+      animation: none;
+    }
+  }
+</style>

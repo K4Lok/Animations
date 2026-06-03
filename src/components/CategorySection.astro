@@ -1,0 +1,61 @@
+---
+import TermCard from "./TermCard.astro";
+import type { Category } from "../data/terms";
+
+interface Props {
+  category: Category;
+  index: number;
+}
+
+const { category, index } = Astro.props;
+const num = String(index + 1).padStart(2, "0");
+---
+
+<section class="cat" id={category.id} data-category={category.id}>
+  <header class="cat__head">
+    <span class="cat__num">{num}</span>
+    <div>
+      <h2 class="cat__title">{category.title}</h2>
+      <p class="cat__subtitle">{category.subtitle}</p>
+    </div>
+  </header>
+  <div class="cat__grid">
+    {category.terms.map((term) => <TermCard term={term} />)}
+  </div>
+</section>
+
+<style>
+  .cat {
+    scroll-margin-top: 132px;
+  }
+  .cat__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .cat__num {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-ash);
+    font-weight: 500;
+    padding-top: 4px;
+  }
+  .cat__title {
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.48px;
+    font-weight: 500;
+  }
+  .cat__subtitle {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--color-muted-ash);
+    letter-spacing: 0.1px;
+  }
+  .cat__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+</style>

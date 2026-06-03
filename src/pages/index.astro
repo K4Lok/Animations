@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import CategoryNav from "../components/CategoryNav.astro";
+import CategorySection from "../components/CategorySection.astro";
+import Footer from "../components/Footer.astro";
+import { categories } from "../data/terms";
+---
+
+<Base>
+  <Header />
+  <Hero />
+  <CategoryNav />
+  <main class="glossary">
+    {categories.map((category, i) => <CategorySection category={category} index={i} />)}
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .glossary {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+</style>

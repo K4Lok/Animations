@@ -1,0 +1,182 @@
+---
+import { categories } from "../data/terms";
+---
+
+<div class="catnav" id="glossary">
+  <div class="catnav__inner">
+    <div class="catnav__search">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        type="search"
+        id="term-search"
+        placeholder="Search patterns…"
+        autocomplete="off"
+        aria-label="Search animation patterns"
+      />
+    </div>
+    <nav class="catnav__pills" aria-label="Categories">
+      {
+        categories.map((c) => (
+          <a class="pill" href={`#${c.id}`} data-pill={c.id}>
+            {c.title}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+  <p class="catnav__empty" id="search-empty" hidden>
+    No patterns match <span></span>.
+  </p>
+</div>
+
+<style>
+  .catnav {
+    position: sticky;
+    top: 61px;
+    z-index: 40;
+    background: color-mix(in srgb, var(--color-canvas-white) 85%, transparent);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .catnav__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .catnav__search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 240px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-hairline);
+    background: var(--color-canvas-white);
+    color: var(--color-muted-ash);
+  }
+  .catnav__search input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    color: var(--color-midnight-ink);
+    width: 100%;
+  }
+  .catnav__pills {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+  }
+  .catnav__pills::-webkit-scrollbar {
+    display: none;
+  }
+  .pill {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-muted-ash);
+    border: 1px solid transparent;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .pill:hover {
+    color: var(--color-midnight-ink);
+    background: var(--color-whisper-gray);
+  }
+  .pill.is-active {
+    color: var(--color-midnight-ink);
+    background: var(--color-canvas-white);
+    border-color: var(--border-hairline);
+    box-shadow: var(--shadow-interactive);
+  }
+  .catnav__empty {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    font-size: 14px;
+    color: var(--color-muted-ash);
+  }
+  .catnav__empty span {
+    color: var(--color-midnight-ink);
+    font-weight: 500;
+  }
+  @media (max-width: 720px) {
+    .catnav__search {
+      flex-basis: 150px;
+    }
+  }
+</style>
+
+<script>
+  const search = document.getElementById("term-search") as HTMLInputElement | null;
+  const empty = document.getElementById("search-empty");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>(".term-card"));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>(".cat"));
+  const pills = Array.from(document.querySelectorAll<HTMLAnchorElement>(".pill"));
+
+  // Live search filter
+  search?.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    let anyVisible = false;
+    for (const card of cards) {
+      const hay = (card.dataset.term ?? "") + " " + (card.textContent ?? "").toLowerCase();
+      const match = q === "" || hay.includes(q);
+      card.style.display = match ? "" : "none";
+      if (match) anyVisible = true;
+    }
+    // Hide sections with no visible cards
+    for (const section of sections) {
+      const visible = section.querySelectorAll<HTMLElement>(
+        '.term-card:not([style*="display: none"])'
+      ).length;
+      section.style.display = visible === 0 && q !== "" ? "none" : "";
+    }
+    if (empty) {
+      empty.hidden = anyVisible || q === "";
+      const span = empty.querySelector("span");
+      if (span) span.textContent = `“${search.value.trim()}”`;
+    }
+  });
+
+  // Smooth-scroll a category section into view on pill click
+  for (const pill of pills) {
+    pill.addEventListener("click", (e) => {
+      const id = pill.dataset.pill;
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", `#${id}`);
+      pills.forEach((p) => p.classList.remove("is-active"));
+      pill.classList.add("is-active");
+    });
+  }
+
+  // Scrollspy: highlight the pill for the section in view
+  const byId = new Map(pills.map((p) => [p.dataset.pill, p]));
+  const spy = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          pills.forEach((p) => p.classList.remove("is-active"));
+          byId.get((e.target as HTMLElement).id)?.classList.add("is-active");
+        }
+      }
+    },
+    { rootMargin: "-45% 0px -50% 0px" }
+  );
+  sections.forEach((s) => spy.observe(s));
+</script>

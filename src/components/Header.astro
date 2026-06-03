@@ -1,0 +1,96 @@
+---
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="logo" href="#top" aria-label="Animation Vocabulary home">
+      <span class="logo__mark" aria-hidden="true"></span>
+      <span class="logo__word">Animation <span class="logo__dim">Vocabulary</span></span>
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      <a class="nav-link" href="#glossary">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--color-canvas-white) 82%, transparent);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .site-header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-midnight-ink);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.2px;
+  }
+  .logo__mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: var(--color-midnight-ink);
+    position: relative;
+  }
+  .logo__mark::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 999px;
+    background: var(--color-canvas-white);
+    animation: logo-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes logo-pulse {
+    0%,
+    100% {
+      transform: scale(0.7);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .logo__dim {
+    color: var(--color-muted-ash);
+    font-weight: 500;
+  }
+  .site-header__nav {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+  .nav-link {
+    padding: 6px 14px;
+    border-radius: 8px;
+    color: var(--color-muted-ash);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .nav-link:hover {
+    color: var(--color-midnight-ink);
+    background: var(--color-whisper-gray);
+  }
+  @media (max-width: 640px) {
+    .site-header__nav {
+      display: none;
+    }
+  }
+</style>
