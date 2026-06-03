@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "animation-vocabulary",
+  "account_id": "96f1ca3a18e4fd7b17ac80963b22f43e",
+  "compatibility_date": "2026-06-03",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
