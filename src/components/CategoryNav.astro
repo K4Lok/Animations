@@ -105,6 +105,20 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
   <div class="mtoc__backdrop" data-mtoc-backdrop></div>
 </div>
 
+<!-- Desktop-only floating category marker: pinned to the bottom-right of the
+     viewport while the glossary is in view. The title swaps with a directional
+     slide (up when moving forward through categories, down when moving back). -->
+<div class="catfloat" data-catfloat aria-hidden="true">
+  <span class="catfloat__eyebrow">
+    <span class="catfloat__num" data-catfloat-num>01</span>
+    <span class="catfloat__sep">/</span>
+    <span class="catfloat__total">{String(categories.length).padStart(2, "0")}</span>
+  </span>
+  <span class="catfloat__viewport">
+    <span class="catfloat__text" data-catfloat-text>{categories[0]?.title}</span>
+  </span>
+</div>
+
 <style>
   .catnav {
     position: sticky;
@@ -444,6 +458,66 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     }
   }
 
+  /* ----- Desktop floating category marker ----- */
+  .catfloat {
+    position: fixed;
+    /* Mirror the header gutter: 24px horizontal inset, 12px vertical inset. */
+    right: 24px;
+    bottom: 12px;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .catfloat.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .catfloat__eyebrow {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-ash);
+  }
+  .catfloat__num {
+    color: var(--color-phoenix-orange);
+  }
+  .catfloat__sep {
+    opacity: 0.5;
+  }
+  .catfloat__viewport {
+    display: block;
+    overflow: hidden;
+    padding: 0.08em 0;
+    line-height: 1.05;
+  }
+  .catfloat__text {
+    display: inline-block;
+    font-size: clamp(20px, 2.1vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-muted-ash);
+    will-change: transform, opacity;
+  }
+
+  /* The marker is a desktop affordance only — the mobile bar covers this role. */
+  @media (max-width: 900px) {
+    .catfloat {
+      display: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .mtoc,
     .mtoc__chevron,
@@ -451,6 +525,10 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     .mtoc__backdrop,
     .mtoc__ring-fill {
       transition: none;
+    }
+    .catfloat {
+      transition: opacity 0.2s ease;
+      transform: none;
     }
   }
 </style>
@@ -515,6 +593,52 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     mobileItems.map((el) => [el.dataset.pill ?? "", el.querySelector(".mtoc__label")?.textContent ?? ""])
   );
 
+  // Desktop floating category marker.
+  const catFloat = document.querySelector<HTMLElement>("[data-catfloat]");
+  const floatNum = catFloat?.querySelector<HTMLElement>("[data-catfloat-num]") ?? null;
+  const floatText = catFloat?.querySelector<HTMLElement>("[data-catfloat-text]") ?? null;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const floatOrder = sections.map((s) => s.id);
+  let floatIdx = -1;
+
+  const swapFloatText = (text: string, forward: boolean) => {
+    if (!floatText) return;
+    if (reduceMotion || floatIdx === -1) {
+      floatText.textContent = text;
+      return;
+    }
+    const dir = forward ? -1 : 1; // exit toward top when moving forward
+    floatText.getAnimations().forEach((a) => a.cancel());
+    const exit = floatText.animate(
+      [
+        { transform: "translateY(0)", opacity: 1 },
+        { transform: `translateY(${dir * 110}%)`, opacity: 0 },
+      ],
+      { duration: 230, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" }
+    );
+    exit.onfinish = () => {
+      floatText.textContent = text;
+      floatText.getAnimations().forEach((a) => a.cancel());
+      floatText.animate(
+        [
+          { transform: `translateY(${-dir * 110}%)`, opacity: 0 },
+          { transform: "translateY(0)", opacity: 1 },
+        ],
+        { duration: 360, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+      );
+    };
+  };
+
+  const updateFloat = (id: string | null) => {
+    if (!catFloat || !id) return;
+    const idx = floatOrder.indexOf(id);
+    if (idx < 0 || idx === floatIdx) return;
+    const forward = floatIdx === -1 ? true : idx > floatIdx;
+    floatIdx = idx;
+    if (floatNum) floatNum.textContent = String(idx + 1).padStart(2, "0");
+    swapFloatText(titleById.get(id) ?? "", forward);
+  };
+
   let mtocOpen = false;
   const setMtocOpen = (open: boolean) => {
     if (!mtoc) return;
@@ -548,6 +672,7 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
       if (mtocNum && idx >= 0) mtocNum.textContent = String(idx + 1);
       if (mtocCurrent) mtocCurrent.textContent = titleById.get(id) ?? "";
     }
+    updateFloat(id);
   };
 
   const computeActive = () => {
@@ -574,6 +699,7 @@ const [noMatchPre, noMatchPost] = ui.navNoMatch.split("{q}");
     const visible = started && !ended;
     mtoc.classList.toggle("is-visible", visible);
     if (!visible && mtocOpen) setMtocOpen(false);
+    catFloat?.classList.toggle("is-visible", visible);
 
     // Reading progress: 0 when the glossary top reaches the header, 1 when its
     // bottom reaches the viewport bottom. Drives the ring around the index.
