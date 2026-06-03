@@ -1,7 +1,7 @@
 import { scroll, inView } from "motion";
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, num } from "./utils";
+import { clearStage, dt, num } from "./utils";
 
 function scrollStage(stage: HTMLElement, innerHeight = 520) {
   clearStage(stage);
@@ -13,7 +13,7 @@ function scrollStage(stage: HTMLElement, innerHeight = 520) {
   scroller.append(inner);
   const hint = document.createElement("div");
   hint.className = "demo-caption";
-  hint.textContent = "↕ scroll inside this box";
+  hint.textContent = dt("↕ scroll inside this box");
   stage.append(scroller, hint);
   return { scroller, inner };
 }
@@ -24,7 +24,7 @@ const scrollReveal: DemoFactory = (stage) => {
   for (let i = 0; i < 6; i++) {
     const card = document.createElement("div");
     card.className = "demo-reveal-card";
-    card.textContent = `Item ${i + 1}`;
+    card.textContent = dt("Item {n}", { n: i + 1 });
     card.style.top = `${20 + i * 100}px`;
     inner.append(card);
     items.push(card);
@@ -85,10 +85,10 @@ const parallax: DemoFactory = (stage) => {
   const { scroller, inner } = scrollStage(stage, 800);
   const bg = document.createElement("div");
   bg.className = "demo-layer demo-layer--bg";
-  bg.textContent = "background";
+  bg.textContent = dt("background");
   const fg = document.createElement("div");
   fg.className = "demo-layer demo-layer--fg";
-  fg.textContent = "foreground";
+  fg.textContent = dt("foreground");
   inner.append(bg, fg);
   let depth = 0.4;
   scroll(
@@ -119,7 +119,7 @@ const pageTransition: DemoFactory = (stage) => {
   const btn = document.createElement("button");
   btn.className = "demo-trigger demo-trigger--sm";
   btn.style.cssText += ";position:absolute;left:50%;bottom:8px;transform:translateX(-50%)";
-  btn.textContent = "Navigate →";
+  btn.textContent = dt("Navigate →");
   let duration = 0.5;
   btn.addEventListener("click", () => {
     page = 1 - page;
@@ -157,7 +157,7 @@ const viewTransition: DemoFactory = (stage) => {
   };
   const btn = document.createElement("button");
   btn.className = "demo-trigger demo-trigger--sm";
-  btn.textContent = supported ? "Toggle view" : "View Transitions unsupported — fallback";
+  btn.textContent = supported ? dt("Toggle view") : dt("View Transitions unsupported — fallback");
   btn.addEventListener("click", () => {
     if (supported) (document as any).startViewTransition(() => apply());
     else {

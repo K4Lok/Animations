@@ -10,11 +10,12 @@ interface PlaygroundI18n {
   code: string;
   unavailable: string;
   noSnippet: string;
+  demos?: Record<string, string>;
 }
 
 const I18N: PlaygroundI18n = (
   typeof window !== "undefined" ? (window as unknown as { __PG_I18N__?: PlaygroundI18n }).__PG_I18N__ : undefined
-) ?? { code: "Code", unavailable: "Demo unavailable", noSnippet: "// No snippet for this demo." };
+) ?? { code: "Code", unavailable: "Demo unavailable", noSnippet: "// No snippet for this demo.", demos: {} };
 
 class AnimPlayground extends HTMLElement {
   private instance: DemoInstance | null = null;

@@ -1,3 +1,20 @@
+/**
+ * Translate a demo display string. Keys are the English source text; the active
+ * locale's overrides live on `window.__PG_I18N__.demos` (English passes through).
+ * `{token}` placeholders are filled from `vars`.
+ */
+export function dt(key: string, vars?: Record<string, string | number>): string {
+  const map =
+    typeof window !== "undefined"
+      ? (window as unknown as { __PG_I18N__?: { demos?: Record<string, string> } }).__PG_I18N__?.demos
+      : undefined;
+  let out = map?.[key] ?? key;
+  if (vars) {
+    for (const [k, v] of Object.entries(vars)) out = out.replaceAll(`{${k}}`, String(v));
+  }
+  return out;
+}
+
 export function prefersReducedMotion(): boolean {
   return (
     typeof matchMedia !== "undefined" &&

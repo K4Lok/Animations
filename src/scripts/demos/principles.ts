@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num, bool } from "./utils";
+import { clearStage, createBox, dt, num, bool } from "./utils";
 
 const purposeful: DemoFactory = (stage) => {
   clearStage(stage);
@@ -12,8 +12,8 @@ const purposeful: DemoFactory = (stage) => {
     play(p) {
       const bad = bool(p, "gratuitous", false);
       cap.textContent = bad
-        ? "Gratuitous: spins and flips for no reason"
-        : "Purposeful: a clean entrance that orients you";
+        ? dt("Gratuitous: spins and flips for no reason")
+        : dt("Purposeful: a clean entrance that orients you");
       if (bad)
         animate(box, { rotate: [0, 720], scale: [0.2, 1.4, 1], opacity: [0, 1] }, { duration: 1.1, ease: "easeInOut" });
       else animate(box, { y: [16, 0], opacity: [0, 1] }, { duration: 0.4, ease: [0.16, 1, 0.3, 1] });
@@ -88,14 +88,14 @@ const perceivedPerf: DemoFactory = (stage) => {
     play(p) {
       clearTimeout(timer);
       const useSkeleton = bool(p, "skeleton", true);
-      cap.textContent = useSkeleton ? "Skeleton → feels instant and responsive" : "Spinner → feels like waiting";
+      cap.textContent = useSkeleton ? dt("Skeleton → feels instant and responsive") : dt("Spinner → feels like waiting");
       if (useSkeleton) {
         view.innerHTML = `<div class="demo-skel__line" style="width:55%"></div><div class="demo-skel__line" style="width:100%"></div><div class="demo-skel__line" style="width:78%"></div>`;
       } else {
         view.innerHTML = `<div class="demo-spinner"></div>`;
       }
       timer = window.setTimeout(() => {
-        view.innerHTML = `<div style="font-weight:600">Aurora Borealis</div><div style="font-size:12px;color:var(--color-muted-ash);margin-top:6px">Loaded in 1.2s</div>`;
+        view.innerHTML = `<div style="font-weight:600">Aurora Borealis</div><div style="font-size:12px;color:var(--color-muted-ash);margin-top:6px">${dt("Loaded in 1.2s")}</div>`;
       }, 1200);
     },
     cleanup: () => clearTimeout(timer),
@@ -115,7 +115,7 @@ const frequency: DemoFactory = (stage) => {
       const dur = 0.3 + (1 - restraint) * 0.9;
       const travel = 10 + (1 - restraint) * 80;
       cap.textContent =
-        restraint > 0.6 ? "Seen often → short and subtle" : "Seen rarely → can be bigger and slower";
+        restraint > 0.6 ? dt("Seen often → short and subtle") : dt("Seen rarely → can be bigger and slower");
       animate(box, { y: [travel * 0.4, 0], scale: [1 - (1 - restraint) * 0.3, 1], opacity: [0, 1] }, { duration: dur, ease: [0.16, 1, 0.3, 1] });
     },
     code: () => `// frequent UI → shorter, smaller motion\nduration = 0.3 + rareness * 0.9;`,
@@ -148,7 +148,7 @@ const hardwareAccel: DemoFactory = (stage) => {
   const box = createBox({ label: "GPU" });
   const cap = document.createElement("div");
   cap.className = "demo-caption";
-  cap.textContent = "transform + opacity stay on the GPU — buttery smooth";
+  cap.textContent = dt("transform + opacity stay on the GPU — buttery smooth");
   stage.append(box, cap);
   let ctrl: { stop: () => void } | null = null;
   return {
@@ -172,8 +172,8 @@ const reducedMotion: DemoFactory = (stage) => {
     play(p) {
       const reduce = bool(p, "reduce", false);
       cap.textContent = reduce
-        ? "Reduced: a quiet fade, no large movement"
-        : "Full: slides and scales in";
+        ? dt("Reduced: a quiet fade, no large movement")
+        : dt("Full: slides and scales in");
       if (reduce) animate(box, { opacity: [0, 1] }, { duration: 0.3 });
       else animate(box, { x: [-90, 0], scale: [0.6, 1], opacity: [0, 1] }, { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] });
     },

@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num } from "./utils";
+import { clearStage, createBox, dt, num } from "./utils";
 
 function springStage(stage: HTMLElement, label = "") {
   clearStage(stage);
@@ -59,7 +59,7 @@ const perceptualDuration: DemoFactory = (stage) => {
   return {
     play(p) {
       const v = num(p, "visual", 0.6);
-      cap.textContent = `Feels done in ~${v}s, while micro-settling continues underneath`;
+      cap.textContent = dt("Feels done in ~{v}s, while micro-settling continues underneath", { v });
       animate(box, { x: [-110, 110] }, { type: "spring", visualDuration: v, bounce: num(p, "bounce", 0.4) });
     },
     code: (p) => `animate(el, { x: 110 }, {\n  type: "spring",\n  visualDuration: ${num(p, "visual", 0.6)}, // perceptual\n});`,
@@ -70,11 +70,11 @@ function flickBox(stage: HTMLElement, showVelocity = false) {
   clearStage(stage);
   const track = document.createElement("div");
   track.className = "demo-track demo-track--wide";
-  const box = createBox({ label: showVelocity ? "↔" : "Flick" });
+  const box = createBox({ label: showVelocity ? "↔" : dt("Flick") });
   track.append(box);
   const cap = document.createElement("div");
   cap.className = "demo-caption";
-  cap.textContent = "Flick the box and let go";
+  cap.textContent = dt("Flick the box and let go");
   stage.append(track, cap);
 
   let startX = 0,
@@ -99,7 +99,7 @@ function flickBox(stage: HTMLElement, showVelocity = false) {
     lastX = posX;
     lastT = now;
     box.style.transform = `translateX(${posX}px)`;
-    if (showVelocity) cap.textContent = `velocity: ${vx.toFixed(0)} px/s`;
+    if (showVelocity) cap.textContent = dt("velocity: {v} px/s", { v: vx.toFixed(0) });
   });
   const end = () => {
     if (!dragging) return;
@@ -107,7 +107,7 @@ function flickBox(stage: HTMLElement, showVelocity = false) {
     animate(box, { x: [posX, 0] }, { type: "spring", velocity: vx, stiffness: 180, damping: 18 }).then(() => {
       posX = 0;
     });
-    if (showVelocity) cap.textContent = `released at ${vx.toFixed(0)} px/s — spring carries it home`;
+    if (showVelocity) cap.textContent = dt("released at {v} px/s — spring carries it home", { v: vx.toFixed(0) });
   };
   box.addEventListener("pointerup", end);
   box.addEventListener("pointercancel", end);
@@ -133,7 +133,7 @@ const interruptible: DemoFactory = (stage) => {
   field.append(box);
   const cap = document.createElement("div");
   cap.className = "demo-caption";
-  cap.textContent = "Click anywhere — then click again before it lands";
+  cap.textContent = dt("Click anywhere — then click again before it lands");
   stage.append(field, cap);
   field.addEventListener("pointerdown", (e) => {
     const rect = field.getBoundingClientRect();

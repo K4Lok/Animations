@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num } from "./utils";
+import { clearStage, createBox, dt, num } from "./utils";
 
 type Controls = { stop: () => void };
 
@@ -121,7 +121,7 @@ const float: DemoFactory = (stage) => {
 
 const idle: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "idle" });
+  const box = createBox({ label: dt("idle") });
   stage.append(box);
   let ctrl: Controls | null = null;
   return {

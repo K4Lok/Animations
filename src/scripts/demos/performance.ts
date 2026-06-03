@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, bool } from "./utils";
+import { clearStage, bool, dt } from "./utils";
 
 type Controls = { stop: () => void };
 
@@ -65,8 +65,8 @@ const jank: DemoFactory = (stage) => {
     play(p) {
       stress = bool(p, "stress", false);
       cap.textContent = stress
-        ? "Main thread is busy → frames drop → jank"
-        : "Main thread idle → smooth 60fps";
+        ? dt("Main thread is busy → frames drop → jank")
+        : dt("Main thread idle → smooth 60fps");
       ctrl?.stop();
       ctrl = animate(dot, { x: [-90, 90] }, { duration: 1, ease: "linear", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls;
     },
@@ -92,7 +92,7 @@ const droppedFrame: DemoFactory = (stage) => {
   }
   const cap = document.createElement("div");
   cap.className = "demo-caption";
-  cap.textContent = "Frame 5 missed its deadline — a visible hitch";
+  cap.textContent = dt("Frame 5 missed its deadline — a visible hitch");
   stage.append(strip, cap);
   let ctrl: Controls | null = null;
   return {
@@ -148,8 +148,8 @@ function comparison(stage: HTMLElement, goodLabel: string, badLabel: string, run
 const compositing: DemoFactory = (stage) => {
   const c = comparison(
     stage,
-    "transform — composited",
-    "margin-left — paints",
+    dt("transform — composited"),
+    dt("margin-left — paints"),
     (good, bad) => [
       animate(good, { x: [0, 120] }, { duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls,
       animate(bad, { marginLeft: ["0px", "120px"] }, { duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls,
@@ -179,8 +179,8 @@ const willChange: DemoFactory = (stage) => {
       const hint = bool(p, "hint", true);
       box.style.willChange = hint ? "transform" : "auto";
       cap.textContent = hint
-        ? "will-change: transform → promoted to its own layer ahead of time"
-        : "will-change: auto → promoted only once it starts moving";
+        ? dt("will-change: transform → promoted to its own layer ahead of time")
+        : dt("will-change: auto → promoted only once it starts moving");
       ctrl?.stop();
       ctrl = animate(box, { x: [-90, 90], scale: [1, 1.1] }, { duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls;
     },
@@ -193,8 +193,8 @@ const willChange: DemoFactory = (stage) => {
 const layoutThrashing: DemoFactory = (stage) => {
   const c = comparison(
     stage,
-    "transform — one layer",
-    "left/width — relayout",
+    dt("transform — one layer"),
+    dt("left/width — relayout"),
     (good, bad) => [
       animate(good, { x: [0, 120] }, { duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls,
       animate(bad, { left: ["0px", "120px"], width: ["44px", "64px"] }, { duration: 1, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }) as unknown as Controls,

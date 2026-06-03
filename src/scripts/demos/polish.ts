@@ -1,10 +1,10 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num, str, bool } from "./utils";
+import { clearStage, createBox, dt, num, str, bool } from "./utils";
 
 const blur: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Hi" });
+  const box = createBox({ label: dt("Hi") });
   stage.append(box);
   return {
     play(p) {
@@ -42,7 +42,7 @@ const mask: DemoFactory = (stage) => {
   clearStage(stage);
   const box = document.createElement("div");
   box.className = "demo-mask";
-  box.textContent = "Soft mask";
+  box.textContent = dt("Soft mask");
   stage.append(box);
   return {
     play(p) {
@@ -62,10 +62,10 @@ const beforeAfter: DemoFactory = (stage) => {
   wrap.className = "demo-ba";
   const before = document.createElement("div");
   before.className = "demo-ba__layer demo-ba__before";
-  before.textContent = "AFTER";
+  before.textContent = dt("AFTER");
   const after = document.createElement("div");
   after.className = "demo-ba__layer demo-ba__after";
-  after.textContent = "BEFORE";
+  after.textContent = dt("BEFORE");
   const handle = document.createElement("div");
   handle.className = "demo-ba__handle";
   wrap.append(before, after, handle);
@@ -182,7 +182,7 @@ const tabularNumbers: DemoFactory = (stage) => {
     play(p) {
       const tab = bool(p, "tabular", true);
       el.style.fontVariantNumeric = tab ? "tabular-nums" : "normal";
-      cap.textContent = tab ? "tabular-nums → digits never shift" : "proportional → watch the width jitter";
+      cap.textContent = tab ? dt("tabular-nums → digits never shift") : dt("proportional → watch the width jitter");
       clearInterval(timer);
       timer = window.setInterval(() => {
         el.textContent = String(Math.floor(Math.random() * 9000) + 1000);
@@ -201,7 +201,7 @@ const typewriter: DemoFactory = (stage) => {
   el.innerHTML = `<span class="demo-type__text"></span><span class="demo-type__caret"></span>`;
   const textEl = el.querySelector(".demo-type__text") as HTMLElement;
   stage.append(el);
-  const full = "Text appears one character at a time…";
+  const full = dt("Text appears one character at a time…");
   let timer: number | undefined;
   return {
     play(p) {

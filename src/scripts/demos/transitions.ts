@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num } from "./utils";
+import { clearStage, createBox, dt, num } from "./utils";
 
 const SPRING = { type: "spring", stiffness: 320, damping: 30 } as const;
 
@@ -53,7 +53,7 @@ const morph: DemoFactory = (stage) => {
   return {
     play(p) {
       const expanded = p.expanded === true;
-      island.textContent = expanded ? "Now playing — Aurora" : "•••";
+      island.textContent = expanded ? dt("Now playing — Aurora") : "•••";
       animate(
         island,
         { width: expanded ? "220px" : "84px", height: expanded ? "64px" : "32px", borderRadius: ["18px", "18px"] },
@@ -121,11 +121,12 @@ const accordion: DemoFactory = (stage) => {
     "width:200px;border-radius:12px;background:#fff;box-shadow:var(--shadow-floating);overflow:hidden";
   const head = document.createElement("div");
   head.style.cssText = "padding:12px 14px;font-size:13px;font-weight:500";
-  head.textContent = "Details";
+  head.textContent = dt("Details");
   const body = document.createElement("div");
   body.style.cssText = "height:0;overflow:hidden";
-  body.innerHTML =
-    "<div style='padding:0 14px 14px;font-size:12px;color:var(--color-muted-ash);line-height:1.5'>A section smoothly expands and collapses its height to show or hide content.</div>";
+  body.innerHTML = `<div style='padding:0 14px 14px;font-size:12px;color:var(--color-muted-ash);line-height:1.5'>${dt(
+    "A section smoothly expands and collapses its height to show or hide content."
+  )}</div>`;
   panel.append(head, body);
   stage.append(panel);
   return {
@@ -147,7 +148,7 @@ const directionAware: DemoFactory = (stage) => {
   const wrap = document.createElement("div");
   wrap.style.cssText = "position:relative;width:200px;height:90px;overflow:hidden;border-radius:12px;background:#fff;box-shadow:var(--shadow-floating)";
   let idx = 0;
-  const labels = ["Page 1", "Page 2", "Page 3"];
+  const labels = [1, 2, 3].map((n) => dt("Page {n}", { n }));
   let slide: HTMLElement = document.createElement("div");
   slide.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;font-size:16px;font-weight:600";
   slide.textContent = labels[0];
@@ -171,7 +172,7 @@ const directionAware: DemoFactory = (stage) => {
     animate(incoming, { x: [dir > 0 ? 200 : -200, 0], opacity: [0, 1] }, { duration, ease: [0.16, 1, 0.3, 1] });
     slide = incoming;
   }
-  controls.append(mk("‹ Back", -1), mk("Next ›", 1));
+  controls.append(mk(dt("‹ Back"), -1), mk(dt("Next ›"), 1));
   wrap.append(slide, controls);
   stage.append(wrap);
   return {

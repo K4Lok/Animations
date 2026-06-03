@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num } from "./utils";
+import { clearStage, createBox, dt, num } from "./utils";
 
 const hint = (text: string) => {
   const el = document.createElement("div");
@@ -11,7 +11,7 @@ const hint = (text: string) => {
 
 const hover: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Hover" });
+  const box = createBox({ label: dt("Hover") });
   box.style.transition = "transform .25s cubic-bezier(0.34,1.56,0.64,1), box-shadow .25s ease";
   box.style.cursor = "pointer";
   box.addEventListener("pointerenter", () => {
@@ -22,7 +22,7 @@ const hover: DemoFactory = (stage) => {
     box.style.transform = "";
     box.style.boxShadow = "";
   });
-  stage.append(box, hint("Move your cursor over the box"));
+  stage.append(box, hint(dt("Move your cursor over the box")));
   return { play() {}, continuous: true, code: () => `el:hover { transform: scale(1.1) translateY(-4px); }` };
 };
 
@@ -30,14 +30,14 @@ const press: DemoFactory = (stage) => {
   clearStage(stage);
   const btn = document.createElement("button");
   btn.className = "demo-trigger demo-trigger--solid";
-  btn.textContent = "Press me";
+  btn.textContent = dt("Press me");
   btn.style.transition = "transform .12s ease";
   const down = () => (btn.style.transform = "scale(0.94)");
   const up = () => (btn.style.transform = "");
   btn.addEventListener("pointerdown", down);
   btn.addEventListener("pointerup", up);
   btn.addEventListener("pointerleave", up);
-  stage.append(btn, hint("Click and hold"));
+  stage.append(btn, hint(dt("Click and hold")));
   return { play() {}, continuous: true, code: () => `el:active { transform: scale(0.94); }` };
 };
 
@@ -45,7 +45,7 @@ const holdToConfirm: DemoFactory = (stage) => {
   clearStage(stage);
   const btn = document.createElement("button");
   btn.className = "demo-trigger demo-trigger--solid demo-hold";
-  btn.innerHTML = `<span class="demo-hold__fill"></span><span class="demo-hold__label">Hold to confirm</span>`;
+  btn.innerHTML = `<span class="demo-hold__fill"></span><span class="demo-hold__label">${dt("Hold to confirm")}</span>`;
   const fill = btn.querySelector(".demo-hold__fill") as HTMLElement;
   const label = btn.querySelector(".demo-hold__label") as HTMLElement;
   let hold = 1.2;
@@ -53,8 +53,8 @@ const holdToConfirm: DemoFactory = (stage) => {
   const start = () => {
     anim = animate(fill, { width: ["0%", "100%"] }, { duration: hold, ease: "linear" });
     (anim as any).then?.(() => {
-      label.textContent = "Confirmed ✓";
-      setTimeout(() => (label.textContent = "Hold to confirm"), 900);
+      label.textContent = dt("Confirmed ✓");
+      setTimeout(() => (label.textContent = dt("Hold to confirm")), 900);
     });
   };
   const cancel = () => {
@@ -64,7 +64,7 @@ const holdToConfirm: DemoFactory = (stage) => {
   btn.addEventListener("pointerdown", start);
   btn.addEventListener("pointerup", cancel);
   btn.addEventListener("pointerleave", cancel);
-  stage.append(btn, hint("Press and hold until it fills"));
+  stage.append(btn, hint(dt("Press and hold until it fills")));
   return {
     play(p) {
       hold = num(p, "hold", 1.2);
@@ -133,8 +133,8 @@ function draggable(el: HTMLElement, opts: { onRelease?: (vx: number, vy: number)
 
 const drag: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Drag" });
-  stage.append(box, hint("Throw the box — it carries momentum"));
+  const box = createBox({ label: dt("Drag") });
+  stage.append(box, hint(dt("Throw the box — it carries momentum")));
   const d = draggable(box, {
     onRelease: (vx, vy) => {
       const { x, y } = d.pos;
@@ -148,13 +148,13 @@ const dragReorder: DemoFactory = (stage) => {
   clearStage(stage);
   const list = document.createElement("div");
   list.style.cssText = "position:relative;display:flex;flex-direction:column;gap:8px;width:200px";
-  ["Design", "Build", "Ship", "Learn"].forEach((t) => {
+  [dt("Design"), dt("Build"), dt("Ship"), dt("Learn")].forEach((t) => {
     const row = document.createElement("div");
     row.className = "demo-row";
     row.textContent = t;
     list.append(row);
   });
-  stage.append(list, hint("Drag a row — the dashed slot shows where it lands"));
+  stage.append(list, hint(dt("Drag a row — the dashed slot shows where it lands")));
 
   let dragEl: HTMLElement | null = null;
   let placeholder: HTMLElement | null = null;
@@ -228,8 +228,8 @@ const swipeDismiss: DemoFactory = (stage) => {
   clearStage(stage);
   const toast = document.createElement("div");
   toast.className = "demo-toast";
-  toast.textContent = "Swipe me away →";
-  stage.append(toast, hint("Drag horizontally past the edge to dismiss"));
+  toast.textContent = dt("Swipe me away →");
+  stage.append(toast, hint(dt("Drag horizontally past the edge to dismiss")));
   const d = draggable(toast, {
     axis: "x",
     onRelease: (vx) => {
@@ -256,7 +256,7 @@ const rubberBanding: DemoFactory = (stage) => {
   track.className = "demo-track";
   const box = createBox({ label: "", size: 48 });
   track.append(box);
-  stage.append(track, hint("Drag past the edges — it resists"));
+  stage.append(track, hint(dt("Drag past the edges — it resists")));
   const limit = 60;
   let lastX = 0;
   box.style.touchAction = "none";
@@ -294,7 +294,7 @@ const shake: DemoFactory = (stage) => {
   clearStage(stage);
   const field = document.createElement("div");
   field.className = "demo-field";
-  field.textContent = "wrong password";
+  field.textContent = dt("wrong password");
   stage.append(field);
   return {
     play(p) {
@@ -309,7 +309,7 @@ const ripple: DemoFactory = (stage) => {
   clearStage(stage);
   const surface = document.createElement("button");
   surface.className = "demo-ripple-surface";
-  surface.textContent = "Tap anywhere";
+  surface.textContent = dt("Tap anywhere");
   surface.addEventListener("pointerdown", (e) => {
     const rect = surface.getBoundingClientRect();
     const r = document.createElement("span");

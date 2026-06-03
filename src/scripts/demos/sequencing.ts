@@ -1,7 +1,7 @@
 import { stagger } from "motion";
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, EASING_ARRAYS, num, str } from "./utils";
+import { clearStage, createBox, dt, EASING_ARRAYS, num, str } from "./utils";
 
 function ease(p: Record<string, unknown>) {
   return EASING_ARRAYS[str(p, "easing", "ease-out")] ?? EASING_ARRAYS["ease-out"];
@@ -88,7 +88,7 @@ const orchestration: DemoFactory = (stage) => {
   const btn = document.createElement("div");
   btn.style.cssText =
     "height:28px;border-radius:8px;background:var(--color-midnight-ink);color:#fff;display:grid;place-items:center;font-size:11px";
-  btn.textContent = "Confirm";
+  btn.textContent = dt("Confirm");
   card.append(bar, line, btn);
   stage.append(card);
   return {
@@ -148,8 +148,8 @@ const fillMode: DemoFactory = (stage) => {
       );
       caption.textContent =
         fill === "none"
-          ? "fill: none → snaps back to start when done"
-          : "fill: forwards → holds the final frame";
+          ? dt("fill: none → snaps back to start when done")
+          : dt("fill: forwards → holds the final frame");
     },
     code: (p) =>
       `el.animate(keyframes, {\n  duration: ${num(p, "duration", 0.6) * 1000},\n  fill: "${str(p, "fill", "forwards")}",\n});`,

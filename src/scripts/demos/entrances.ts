@@ -3,6 +3,7 @@ import type { DemoFactory, Params } from "./types";
 import {
   clearStage,
   createBox,
+  dt,
   EASING_ARRAYS,
   num,
   str,
@@ -22,7 +23,7 @@ function ease(p: Params) {
 
 const fade: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Hi" });
+  const box = createBox({ label: dt("Hi") });
   stage.append(box);
   return {
     play(p) {
@@ -36,7 +37,7 @@ const fade: DemoFactory = (stage) => {
 
 const slide: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Hi" });
+  const box = createBox({ label: dt("Hi") });
   stage.append(box);
   return {
     play(p) {
@@ -60,7 +61,7 @@ const slide: DemoFactory = (stage) => {
 
 const scale: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Hi" });
+  const box = createBox({ label: dt("Hi") });
   stage.append(box);
   return {
     play(p) {
@@ -77,7 +78,7 @@ const scale: DemoFactory = (stage) => {
 
 const pop: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Pop" });
+  const box = createBox({ label: dt("Pop") });
   stage.append(box);
   return {
     play(p) {
@@ -108,7 +109,7 @@ const closedClip = (dir: string) =>
 
 const reveal: DemoFactory = (stage) => {
   clearStage(stage);
-  const box = createBox({ label: "Reveal", size: 120 });
+  const box = createBox({ label: dt("Reveal"), size: 120 });
   // Start fully clipped so the first frame is empty — otherwise the box flashes
   // fully visible for a moment before the reveal runs.
   box.style.clipPath = closedClip("left");

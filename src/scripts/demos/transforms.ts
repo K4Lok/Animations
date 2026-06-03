@@ -1,6 +1,6 @@
 import { animate } from "./anim";
 import type { DemoFactory } from "./types";
-import { clearStage, createBox, num, str } from "./utils";
+import { clearStage, createBox, dt, num, str } from "./utils";
 
 const translate: DemoFactory = (stage) => {
   clearStage(stage);
@@ -88,7 +88,7 @@ const perspective: DemoFactory = (stage) => {
     play(p) {
       const persp = num(p, "perspective", 400);
       scene.style.perspective = `${persp}px`;
-      cap.textContent = `${persp}px — ${persp < 500 ? "exaggerated depth" : "subtle depth"}`;
+      cap.textContent = `${persp}px — ${persp < 500 ? dt("exaggerated depth") : dt("subtle depth")}`;
       animate(box, { rotateY: [0, 360] }, { duration: num(p, "duration", 1.4), ease: "linear" });
     },
     code: (p) => `parent { perspective: ${num(p, "perspective", 400)}px }\nanimate(el, { rotateY: 360 });`,
@@ -114,13 +114,13 @@ const originAware: DemoFactory = (stage) => {
   wrap.style.cssText = "position:relative;display:flex;flex-direction:column;align-items:center;gap:8px";
   const btn = document.createElement("button");
   btn.className = "demo-trigger";
-  btn.textContent = "Open menu";
+  btn.textContent = dt("Open menu");
   const pop = document.createElement("div");
   pop.style.cssText =
     "position:absolute;top:56px;width:220px;padding:8px;border-radius:14px;background:#fff;box-shadow:var(--shadow-xl);transform-origin:top center;font-size:15px;color:var(--color-midnight-ink);z-index:2";
   const item = (t: string) =>
     `<div style="padding:10px 12px;border-radius:8px;font-weight:500">${t}</div>`;
-  pop.innerHTML = item("Profile") + item("Settings") + item("Log out");
+  pop.innerHTML = item(dt("Profile")) + item(dt("Settings")) + item(dt("Log out"));
   wrap.append(btn, pop);
   stage.append(wrap);
   return {
