@@ -359,6 +359,7 @@ export const categories: Category[] = [
         name: "Scroll reveal",
         blurb: "Elements fade or slide into place as they enter the viewport.",
         demo: "scroll:scrollReveal",
+        useCaseDemo: "scroll:scrollRevealUseCase",
         controls: [duration(0.5)],
       },
       {
@@ -366,12 +367,14 @@ export const categories: Category[] = [
         name: "Scroll-driven animation",
         blurb: "An animation whose progress is tied directly to scroll position.",
         demo: "scroll:scrollDriven",
+        useCaseDemo: "scroll:scrollDrivenUseCase",
       },
       {
         id: "parallax",
         name: "Parallax",
         blurb: "Background and foreground move at different speeds while scrolling, creating depth.",
         demo: "scroll:parallax",
+        useCaseDemo: "scroll:parallaxUseCase",
         controls: [range("depth", "Depth", 0.1, 0.8, 0.05, 0.4)],
       },
       {
@@ -379,6 +382,7 @@ export const categories: Category[] = [
         name: "Page transition",
         blurb: "An animation that plays when navigating from one page or route to another.",
         demo: "scroll:pageTransition",
+        useCaseDemo: "scroll:pageTransitionUseCase",
         controls: [duration(0.5)],
       },
       {
@@ -386,6 +390,7 @@ export const categories: Category[] = [
         name: "View transition",
         blurb: "The browser morphs between two states or pages, connecting shared elements.",
         demo: "scroll:viewTransition",
+        useCaseDemo: "scroll:viewTransitionUseCase",
         controls: [duration(0.5)],
       },
     ],
