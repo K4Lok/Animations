@@ -95,6 +95,7 @@
   body {
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "ss02";
+    overflow-x: clip;
     background-color: var(--color-canvas-white);
     color: var(--color-midnight-ink);
     font-size: var(--text-body);

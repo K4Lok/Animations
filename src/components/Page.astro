@@ -25,7 +25,6 @@ const categories = localizeCategories(locale);
   .layout {
     position: relative;
     z-index: 2;
-    background: var(--color-canvas-white);
     max-width: 1200px;
     margin: 0 auto;
     padding: 56px 24px;
@@ -33,6 +32,15 @@ const categories = localizeCategories(locale);
     grid-template-columns: minmax(0, 1fr) 244px;
     gap: clamp(32px, 4vw, 56px);
     align-items: start;
+  }
+  /* Full-bleed white backdrop so the hero illustration spilling into the side
+     gutters is covered, not just the centered content column. */
+  .layout::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 calc(50% - 50vw);
+    background: var(--color-canvas-white);
   }
   .glossary {
     display: flex;
