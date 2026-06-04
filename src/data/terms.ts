@@ -217,6 +217,7 @@ export const categories: Category[] = [
         name: "Translate",
         blurb: "Move an element along the X or Y axis.",
         demo: "transforms:translate",
+        useCaseDemo: "transforms:translateUseCase",
         controls: [range("x", "X", -100, 100, 4, 80, "px"), range("y", "Y", -60, 60, 4, 0, "px"), duration(0.6)],
       },
       {
@@ -224,6 +225,7 @@ export const categories: Category[] = [
         name: "Scale",
         blurb: "Make an element bigger or smaller.",
         demo: "transforms:scale",
+        useCaseDemo: "transforms:scaleUseCase",
         controls: [range("scale", "Scale", 0.3, 1.8, 0.05, 1.4), duration(0.6)],
       },
       {
@@ -231,6 +233,7 @@ export const categories: Category[] = [
         name: "Rotate",
         blurb: "Spin an element around a point.",
         demo: "transforms:rotate",
+        useCaseDemo: "transforms:rotateUseCase",
         controls: [range("angle", "Angle", -360, 360, 5, 180, "°"), duration(0.7)],
       },
       {
@@ -245,6 +248,7 @@ export const categories: Category[] = [
         name: "3D tilt / Flip",
         blurb: "Rotate in 3D space (rotateX / rotateY) to add depth.",
         demo: "transforms:tilt3d",
+        useCaseDemo: "transforms:tilt3dUseCase",
         controls: [range("rotateX", "Rotate X", -180, 180, 5, 25, "°"), range("rotateY", "Rotate Y", -180, 180, 5, 35, "°"), range("perspective", "Perspective", 200, 1200, 20, 600, "px"), duration(0.8)],
       },
       {
@@ -252,6 +256,7 @@ export const categories: Category[] = [
         name: "Perspective",
         blurb: "How strong the 3D effect looks — a lower value exaggerates depth, like the viewer is closer.",
         demo: "transforms:perspective",
+        useCaseDemo: "transforms:perspectiveUseCase",
         controls: [range("perspective", "Perspective", 150, 1400, 10, 400, "px"), duration(1.4, 3)],
       },
       {
@@ -259,6 +264,7 @@ export const categories: Category[] = [
         name: "Transform origin",
         blurb: "The anchor point a scale or rotation grows or spins from.",
         demo: "transforms:transformOrigin",
+        useCaseDemo: "transforms:transformOriginUseCase",
         controls: [
           { kind: "select", key: "origin", label: "Origin", options: [
             { label: "Center", value: "center" },
@@ -275,7 +281,8 @@ export const categories: Category[] = [
         name: "Origin-aware animation",
         blurb: "An element animates out of its trigger, like a popover growing from the button that opened it instead of from its own center which is the default in CSS.",
         demo: "transforms:originAware",
-        controls: [toggle("open", "Open", false), duration(0.5)],
+        useCaseDemo: "transforms:originAwareUseCase",
+        controls: [duration(0.5)],
       },
     ],
   },
