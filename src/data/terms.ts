@@ -84,6 +84,7 @@ export const categories: Category[] = [
         name: "Fade in / Fade out",
         blurb: "Element appears or disappears by changing opacity.",
         demo: "entrances:fade",
+        useCaseDemo: "entrances:fadeUseCase",
         controls: [duration(0.6), delay(), easing],
       },
       {
@@ -91,6 +92,7 @@ export const categories: Category[] = [
         name: "Slide in",
         blurb: "Element enters by sliding in from off-screen (left, right, top, or bottom).",
         demo: "entrances:slide",
+        useCaseDemo: "entrances:slideUseCase",
         controls: [direction(), range("distance", "Distance", 16, 120, 4, 64, "px"), duration(0.6), easing],
       },
       {
@@ -98,6 +100,7 @@ export const categories: Category[] = [
         name: "Scale in",
         blurb: "Element grows from smaller to full size as it appears, often paired with a fade.",
         demo: "entrances:scale",
+        useCaseDemo: "entrances:scaleUseCase",
         controls: [range("from", "Start scale", 0.1, 0.95, 0.05, 0.6), duration(0.5), easing],
       },
       {
@@ -105,6 +108,7 @@ export const categories: Category[] = [
         name: "Pop in",
         blurb: "Element appears with a slight overshoot, like it bounces into place.",
         demo: "entrances:pop",
+        useCaseDemo: "entrances:popUseCase",
         controls: [duration(0.5), range("bounce", "Bounce", 0, 0.8, 0.05, 0.5)],
       },
       {
@@ -112,6 +116,7 @@ export const categories: Category[] = [
         name: "Reveal",
         blurb: "Content is uncovered gradually, often by animating a clip-path or mask.",
         demo: "entrances:reveal",
+        useCaseDemo: "entrances:revealUseCase",
         controls: [direction(), duration(0.7), easing],
       },
       {
@@ -119,7 +124,8 @@ export const categories: Category[] = [
         name: "Enter / Exit",
         blurb: "The animation an element plays when it's added to or removed from the screen.",
         demo: "entrances:enterExit",
-        controls: [toggle("present", "Present", true), duration(0.45), easing],
+        useCaseDemo: "entrances:enterExitUseCase",
+        controls: [duration(0.45), easing],
       },
     ],
   },
