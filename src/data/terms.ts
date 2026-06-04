@@ -139,6 +139,7 @@ export const categories: Category[] = [
         name: "Keyframes",
         blurb: "Defined points in an animation (0%, 50%, 100%) that the browser fills the gaps between.",
         demo: "sequencing:keyframes",
+        useCaseDemo: "sequencing:keyframesUseCase",
         controls: [duration(1.4, 3), easing],
       },
       {
@@ -146,6 +147,7 @@ export const categories: Category[] = [
         name: "Interpolation / Tween",
         blurb: "Generating all the in-between frames between a start and end value, so motion is continuous.",
         demo: "sequencing:tween",
+        useCaseDemo: "sequencing:tweenUseCase",
         controls: [duration(1, 3), easing],
       },
       {
@@ -153,6 +155,7 @@ export const categories: Category[] = [
         name: "Stagger",
         blurb: "Animate several items one after another with a small delay between each, creating a cascade.",
         demo: "sequencing:stagger",
+        useCaseDemo: "sequencing:staggerUseCase",
         controls: [range("count", "Items", 3, 8, 1, 5), range("stagger", "Stagger", 0.02, 0.25, 0.01, 0.08, "s"), duration(0.5)],
       },
       {
@@ -160,6 +163,7 @@ export const categories: Category[] = [
         name: "Orchestration",
         blurb: "Deliberately timing multiple animations so they feel like one coordinated motion.",
         demo: "sequencing:orchestration",
+        useCaseDemo: "sequencing:orchestrationUseCase",
         controls: [range("gap", "Beat gap", 0.05, 0.4, 0.01, 0.15, "s")],
       },
       {
@@ -167,6 +171,7 @@ export const categories: Category[] = [
         name: "Delay",
         blurb: "Time before an animation starts.",
         demo: "sequencing:delay",
+        useCaseDemo: "sequencing:delayUseCase",
         controls: [delay(0.4), duration(0.5)],
       },
       {
@@ -174,6 +179,7 @@ export const categories: Category[] = [
         name: "Duration",
         blurb: "How long an animation takes.",
         demo: "sequencing:duration",
+        useCaseDemo: "sequencing:durationUseCase",
         controls: [duration(0.8, 3), easing],
       },
       {
@@ -181,6 +187,7 @@ export const categories: Category[] = [
         name: "Fill mode",
         blurb: "Whether an element keeps its first or last frame's styles before the animation starts or after it ends (e.g. forwards).",
         demo: "sequencing:fillMode",
+        useCaseDemo: "sequencing:fillModeUseCase",
         controls: [
           { kind: "select", key: "fill", label: "Fill", options: [
             { label: "forwards", value: "forwards" },
@@ -195,6 +202,7 @@ export const categories: Category[] = [
         name: "Stepped animation",
         blurb: "An animation that is divided into discrete steps, like a countdown timer.",
         demo: "sequencing:stepped",
+        useCaseDemo: "sequencing:steppedUseCase",
         controls: [range("steps", "Steps", 3, 12, 1, 6), duration(1.2, 3)],
       },
     ],
