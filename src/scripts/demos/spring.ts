@@ -152,7 +152,7 @@ const interruptible: DemoFactory = (stage) => {
 // close. The three spring params tune how the surface arrives and settles.
 const springUseCase: DemoFactory = (stage) => {
   clearStage(stage);
-  const phone = frame("width:210px;height:188px;background:var(--color-whisper-gray)");
+  const phone = frame("width:210px;height:188px;background:var(--color-soft-gray)");
   // Faux app content behind the sheet.
   const bg = elem(
     "div",
@@ -271,7 +271,7 @@ const stiffnessUseCase: DemoFactory = (stage) => {
 // visibly overshoot and oscillate before settling.
 const dampingUseCase: DemoFactory = (stage) => {
   clearStage(stage);
-  const phone = frame("width:210px;height:172px;background:var(--color-whisper-gray)");
+  const phone = frame("width:210px;height:172px;background:var(--color-soft-gray)");
   const bg = elem(
     "div",
     undefined,
@@ -439,7 +439,7 @@ const bounceUseCase: DemoFactory = (stage) => {
 // continues underneath. Mirrors the abstract demo's caption phrasing.
 const perceptualDurationUseCase: DemoFactory = (stage) => {
   clearStage(stage);
-  const phone = frame("width:210px;height:150px;background:var(--color-whisper-gray)");
+  const phone = frame("width:210px;height:150px;background:var(--color-soft-gray)");
   const bg = elem(
     "div",
     undefined,
@@ -502,7 +502,7 @@ function flickCard(stage: HTMLElement, showVelocity: boolean) {
   const lane = elem(
     "div",
     undefined,
-    "position:relative;width:240px;height:104px;border-radius:14px;overflow:hidden;background:var(--color-whisper-gray)"
+    "position:relative;width:240px;height:104px;border-radius:14px;overflow:hidden;background:var(--color-soft-gray)"
   );
   const card = elem(
     "div",
@@ -585,7 +585,7 @@ const velocityUseCase: DemoFactory = (stage) => {
 // and the spring keeps its current velocity into the new target.
 const interruptibleUseCase: DemoFactory = (stage) => {
   clearStage(stage);
-  const field = frame("width:210px;height:150px;background:var(--color-whisper-gray);cursor:pointer");
+  const field = frame("width:210px;height:150px;background:var(--color-soft-gray);cursor:pointer");
   const tile = imageTile({ i: 0, radius: 12 });
   tile.style.cssText += ";position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;box-shadow:var(--shadow-floating);pointer-events:none";
   field.append(tile);

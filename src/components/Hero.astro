@@ -16,11 +16,24 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
     <span class="hero__blob hero__blob--2 gradient-cyan"></span>
   </div>
   <div class="hero__inner">
-    <span class="hero__eyebrow">{eyebrow}</span>
-    <h1 class="hero__title">{ui.heroTitle}</h1>
-    <p class="hero__lede">{ui.heroLede}</p>
-    <div class="hero__cta">
-      <a class="btn btn--dark" href="#glossary">{ui.heroCta}</a>
+    <div class="hero__copy">
+      <span class="hero__eyebrow">{eyebrow}</span>
+      <h1 class="hero__title">{ui.heroTitle}</h1>
+      <p class="hero__lede">{ui.heroLede}</p>
+      <div class="hero__cta">
+        <a class="btn btn--dark" href="#glossary">{ui.heroCta}</a>
+      </div>
+    </div>
+    <div class="hero__media" aria-hidden="true">
+      <img
+        class="hero__illustration"
+        src="/hero-illustration.webp"
+        alt=""
+        width="1672"
+        height="941"
+        loading="eager"
+        decoding="async"
+      />
     </div>
   </div>
 </section>
@@ -72,6 +85,26 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
     max-width: 1200px;
     margin: 0 auto;
     padding: 96px 24px 72px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: 48px;
+  }
+  .hero__media {
+    justify-self: end;
+    width: 100%;
+    max-width: 560px;
+  }
+  .hero__illustration {
+    display: block;
+    width: 100%;
+    height: auto;
+    animation: hero-float 9s ease-in-out infinite alternate;
+  }
+  @keyframes hero-float {
+    to {
+      transform: translateY(-12px);
+    }
   }
   .hero__eyebrow {
     display: inline-block;
@@ -129,6 +162,15 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
   .btn--dark:hover {
     opacity: 0.88;
   }
+  @media (max-width: 900px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .hero__media {
+      display: none;
+    }
+  }
   @media (max-width: 640px) {
     .hero__inner {
       padding: 56px 20px 44px;
@@ -149,7 +191,8 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero__blob {
+    .hero__blob,
+    .hero__illustration {
       animation: none;
     }
   }

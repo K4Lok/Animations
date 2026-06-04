@@ -50,6 +50,18 @@ When building demos, match this standard. The user reviews closely and wants pol
    - FLIP reorders must capture the **outgoing** node in a local const before reassigning
      the tracked variable; a `.then(() => panel.remove())` that closes over a mutated
      `panel`/`slide` will remove the wrong (incoming) element. This was a real bug.
+   - **Display-only overlays must be `pointer-events:none`.** A toast/badge/affordance
+     left at `opacity:0` still has `pointer-events:auto` and will silently swallow clicks
+     on the button beneath it — the control looks dead. This was a real bug (a fade toast
+     over a Save button).
+   - **Never animate list enter/exit with `height`/`margin`.** Animating layout props
+     thrashes layout every frame and visibly lags (the very anti-pattern the Performance
+     category teaches). Collapse/reorder a list with **FLIP transforms** instead: fade the
+     row out, remove it, then animate survivors `y: [dy, 0]` (composited, smooth). This
+     was a real bug.
+   - **A reveal needs motion, not just a clip wipe.** A bare `clip-path` wipe over a flat
+     gradient reads as a growing color bar. Pair the wipe with a zoom + fade (e.g.
+     `scale: [1.18, 1]`, `opacity: [0.35, 1]`) so it reads as content developing in.
 
 ## Component kit
 
