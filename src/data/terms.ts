@@ -5,6 +5,8 @@ export interface Term {
   name: string;
   blurb: string;
   demo: string;
+  /** Optional realistic "use case" demo, shown as the default tab when present. */
+  useCaseDemo?: string;
   controls?: ControlSpec[];
 }
 
@@ -273,48 +275,55 @@ export const categories: Category[] = [
         name: "Crossfade",
         blurb: "One element fades out as another fades in, in the same spot.",
         demo: "transitions:crossfade",
-        controls: [toggle("second", "Show second", false), duration(0.5)],
+        useCaseDemo: "transitions:crossfadeUseCase",
+        controls: [duration(0.5)],
       },
       {
         id: "continuity",
         name: "Continuity transition",
         blurb: "A change that keeps the user oriented by visually connecting before and after. For example, making the same rectangle bigger and smaller.",
         demo: "transitions:continuity",
-        controls: [toggle("expanded", "Expanded", false), duration(0.6)],
+        useCaseDemo: "transitions:continuityUseCase",
+        controls: [duration(0.6)],
       },
       {
         id: "morph",
         name: "Morph",
         blurb: "One shape smoothly turns into another shape, e.g. Dynamic Island.",
         demo: "transitions:morph",
-        controls: [toggle("expanded", "Expanded", false), duration(0.5)],
+        useCaseDemo: "transitions:morphUseCase",
+        controls: [duration(0.5)],
       },
       {
         id: "shared-element",
         name: "Shared element transition",
         blurb: "An element travels and transforms from one position into another, like a thumbnail expanding into a card.",
         demo: "transitions:sharedElement",
-        controls: [toggle("open", "Open", false), duration(0.6)],
+        useCaseDemo: "transitions:sharedElementUseCase",
+        controls: [duration(0.6)],
       },
       {
         id: "layout-animation",
         name: "Layout animation",
         blurb: "When an element's size or position changes, it animates to the new spot instead of snapping.",
         demo: "transitions:layout",
-        controls: [toggle("alt", "Alternate layout", false), duration(0.5)],
+        useCaseDemo: "transitions:layoutUseCase",
+        controls: [duration(0.5)],
       },
       {
         id: "accordion",
         name: "Accordion / Collapse",
         blurb: "A section smoothly expands and collapses its height to show or hide content.",
         demo: "transitions:accordion",
-        controls: [toggle("open", "Open", false), duration(0.45)],
+        useCaseDemo: "transitions:accordionUseCase",
+        controls: [duration(0.45)],
       },
       {
         id: "direction-aware",
         name: "Direction-aware transition",
         blurb: "Content slides one way going forward and the opposite way going back, so navigation has a sense of direction.",
         demo: "transitions:directionAware",
+        useCaseDemo: "transitions:directionAwareUseCase",
         controls: [duration(0.5)],
       },
     ],

@@ -1,5 +1,6 @@
 import { loadDemo } from "./demos/index";
 import { recordAnimations } from "./demos/anim";
+import { clearStage } from "./demos/utils";
 import type { ControlSpec, DemoInstance, Params } from "./demos/types";
 
 interface PlaygroundConfig {
@@ -10,12 +11,21 @@ interface PlaygroundI18n {
   code: string;
   unavailable: string;
   noSnippet: string;
+  useCase?: string;
+  abstract?: string;
   demos?: Record<string, string>;
 }
 
 const I18N: PlaygroundI18n = (
   typeof window !== "undefined" ? (window as unknown as { __PG_I18N__?: PlaygroundI18n }).__PG_I18N__ : undefined
-) ?? { code: "Code", unavailable: "Demo unavailable", noSnippet: "// No snippet for this demo.", demos: {} };
+) ?? {
+  code: "Code",
+  unavailable: "Demo unavailable",
+  noSnippet: "// No snippet for this demo.",
+  useCase: "Use case",
+  abstract: "Abstract",
+  demos: {},
+};
 
 class AnimPlayground extends HTMLElement {
   private instance: DemoInstance | null = null;
@@ -29,6 +39,11 @@ class AnimPlayground extends HTMLElement {
   private hovering = false;
   private looping = false;
   private hoverHost: HTMLElement | null = null;
+  private abstractId = "";
+  private useCaseId = "";
+  private activeId = "";
+  private hasTabs = false;
+  private tabButtons: HTMLButtonElement[] = [];
   private readonly onEnter = () => {
     this.hovering = true;
     void this.startLoop();
@@ -48,6 +63,12 @@ class AnimPlayground extends HTMLElement {
       }
     }
     this.controls = config.controls ?? [];
+
+    this.abstractId = this.dataset.demo ?? "";
+    this.useCaseId = this.dataset.useCaseDemo ?? "";
+    this.hasTabs = this.useCaseId.length > 0;
+    this.activeId = this.hasTabs ? this.useCaseId : this.abstractId;
+
     this.render();
 
     this.observer = new IntersectionObserver(
@@ -68,8 +89,7 @@ class AnimPlayground extends HTMLElement {
   disconnectedCallback() {
     this.observer?.disconnect();
     this.hovering = false;
-    this.hoverHost?.removeEventListener("pointerenter", this.onEnter);
-    this.hoverHost?.removeEventListener("pointerleave", this.onLeave);
+    this.teardownHover();
     this.instance?.cleanup?.();
   }
 
@@ -81,6 +101,16 @@ class AnimPlayground extends HTMLElement {
     this.append(this.stage);
 
     const toolbar = el("div", "pg-toolbar");
+
+    if (this.hasTabs) {
+      const tabs = el("div", "pg-tabs");
+      const useCaseTab = this.makeTab(I18N.useCase ?? "Use case", this.useCaseId);
+      const abstractTab = this.makeTab(I18N.abstract ?? "Abstract", this.abstractId);
+      useCaseTab.classList.add("is-active");
+      tabs.append(useCaseTab, abstractTab);
+      toolbar.append(tabs);
+    }
+
     const codeToggle = el("button", "pg-btn pg-ghost pg-code-toggle") as HTMLButtonElement;
     codeToggle.type = "button";
     codeToggle.textContent = I18N.code;
@@ -174,8 +204,41 @@ class AnimPlayground extends HTMLElement {
   private async boot() {
     if (this.booted) return;
     this.booted = true;
-    const id = this.dataset.demo ?? "";
-    const factory = await loadDemo(id);
+    const factory = await loadDemo(this.activeId);
+    if (!factory) {
+      this.stage.classList.add("pg-stage--error");
+      this.stage.textContent = I18N.unavailable;
+      return;
+    }
+    this.instance = factory(this.stage);
+    this.run();
+    if (!this.instance.continuous) this.setupHover();
+  }
+
+  private makeTab(label: string, demoId: string): HTMLButtonElement {
+    const btn = el("button", "pg-tab") as HTMLButtonElement;
+    btn.type = "button";
+    btn.textContent = label;
+    btn.addEventListener("click", () => void this.switchTo(demoId, btn));
+    this.tabButtons.push(btn);
+    return btn;
+  }
+
+  /** Swap the active demo (Use case ↔ Abstract), rebuilding the stage cleanly. */
+  private async switchTo(demoId: string, btn: HTMLButtonElement) {
+    if (demoId === this.activeId) return;
+    this.activeId = demoId;
+    for (const b of this.tabButtons) b.classList.toggle("is-active", b === btn);
+    if (!this.booted) return; // boot() will instantiate the active demo
+
+    this.hovering = false;
+    this.teardownHover();
+    this.instance?.cleanup?.();
+    this.instance = null;
+    clearStage(this.stage);
+    this.stage.classList.remove("pg-stage--error");
+
+    const factory = await loadDemo(demoId);
     if (!factory) {
       this.stage.classList.add("pg-stage--error");
       this.stage.textContent = I18N.unavailable;
@@ -198,6 +261,11 @@ class AnimPlayground extends HTMLElement {
     this.hoverHost = this.closest<HTMLElement>(".term-card") ?? this;
     this.hoverHost.addEventListener("pointerenter", this.onEnter);
     this.hoverHost.addEventListener("pointerleave", this.onLeave);
+  }
+
+  private teardownHover() {
+    this.hoverHost?.removeEventListener("pointerenter", this.onEnter);
+    this.hoverHost?.removeEventListener("pointerleave", this.onLeave);
   }
 
   private async startLoop() {

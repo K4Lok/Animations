@@ -15,7 +15,7 @@ const { term } = Astro.props;
       <h3 class="term-card__name">{term.name}</h3>
       <p class="term-card__blurb">{term.blurb}</p>
     </div>
-    <Playground demo={term.demo} controls={term.controls} />
+    <Playground demo={term.demo} useCaseDemo={term.useCaseDemo} controls={term.controls} />
   </div>
 </article>
 

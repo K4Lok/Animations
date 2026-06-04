@@ -3,13 +3,14 @@ import type { ControlSpec } from "../scripts/demos/types";
 
 interface Props {
   demo: string;
+  useCaseDemo?: string;
   controls?: ControlSpec[];
 }
 
-const { demo, controls = [] } = Astro.props;
+const { demo, useCaseDemo, controls = [] } = Astro.props;
 const config = JSON.stringify({ controls });
 ---
 
-<anim-playground data-demo={demo}>
+<anim-playground data-demo={demo} data-use-case-demo={useCaseDemo}>
   <script type="application/json" class="pg-config" is:inline set:html={config} />
 </anim-playground>
