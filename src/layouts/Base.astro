@@ -18,7 +18,7 @@ const ui = t(locale);
 const categories = localizeCategories(locale);
 
 const canonical = localeUrl(locale, "/");
-const ogImage = `${SITE}/hero-illustration.webp`;
+const ogImage = `${SITE}/og-image.webp`;
 const author = "Sam KaLok";
 
 const termCount = categories.reduce((n, cat) => n + cat.terms.length, 0);
@@ -129,8 +129,8 @@ const pgI18n = {
       ))
     }
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1672" />
-    <meta property="og:image:height" content="941" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="746" />
     <meta property="og:image:alt" content={ui.metaTitle} />
 
     <meta name="twitter:card" content="summary_large_image" />
