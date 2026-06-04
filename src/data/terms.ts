@@ -539,6 +539,7 @@ export const categories: Category[] = [
         name: "Spring",
         blurb: "Motion driven by physics (tension, mass, damping) rather than a set duration.",
         demo: "spring:spring",
+        useCaseDemo: "spring:springUseCase",
         controls: [range("stiffness", "Stiffness", 50, 600, 10, 240), range("damping", "Damping", 4, 40, 1, 18), range("mass", "Mass", 0.5, 4, 0.1, 1)],
       },
       {
@@ -546,6 +547,7 @@ export const categories: Category[] = [
         name: "Stiffness / Tension",
         blurb: "How strongly the spring pulls toward its target. Higher feels snappier.",
         demo: "spring:stiffness",
+        useCaseDemo: "spring:stiffnessUseCase",
         controls: [range("stiffness", "Stiffness", 40, 700, 10, 200)],
       },
       {
@@ -553,6 +555,7 @@ export const categories: Category[] = [
         name: "Damping",
         blurb: "How quickly a spring settles. Lower damping means more bounce and oscillation.",
         demo: "spring:damping",
+        useCaseDemo: "spring:dampingUseCase",
         controls: [range("damping", "Damping", 2, 40, 1, 10)],
       },
       {
@@ -560,6 +563,7 @@ export const categories: Category[] = [
         name: "Mass",
         blurb: "How heavy the animated element feels. More mass makes it slower and more sluggish.",
         demo: "spring:mass",
+        useCaseDemo: "spring:massUseCase",
         controls: [range("mass", "Mass", 0.5, 6, 0.1, 1)],
       },
       {
@@ -567,6 +571,7 @@ export const categories: Category[] = [
         name: "Bounce",
         blurb: "A spring that overshoots and settles, adding playfulness.",
         demo: "spring:bounce",
+        useCaseDemo: "spring:bounceUseCase",
         controls: [range("bounce", "Bounce", 0, 0.85, 0.05, 0.5), duration(0.7, 2)],
       },
       {
@@ -574,6 +579,7 @@ export const categories: Category[] = [
         name: "Perceptual duration",
         blurb: "How long a spring feels finished, even though it keeps micro-settling underneath.",
         demo: "spring:perceptualDuration",
+        useCaseDemo: "spring:perceptualDurationUseCase",
         controls: [range("visual", "Visual duration", 0.2, 1.5, 0.05, 0.6, "s"), range("bounce", "Bounce", 0, 0.8, 0.05, 0.4)],
       },
       {
@@ -581,18 +587,21 @@ export const categories: Category[] = [
         name: "Momentum",
         blurb: "Motion that carries velocity, especially after a drag or interruption.",
         demo: "spring:momentum",
+        useCaseDemo: "spring:momentumUseCase",
       },
       {
         id: "velocity",
         name: "Velocity",
         blurb: "How fast and in which direction an element is moving. A spring carries it into the next animation when interrupted, so a flicked element keeps its speed.",
         demo: "spring:velocity",
+        useCaseDemo: "spring:velocityUseCase",
       },
       {
         id: "interruptible",
         name: "Interruptible animation",
         blurb: "An animation that can be smoothly redirected mid-flight instead of finishing first.",
         demo: "spring:interruptible",
+        useCaseDemo: "spring:interruptibleUseCase",
       },
     ],
   },
