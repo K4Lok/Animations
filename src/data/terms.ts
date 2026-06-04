@@ -615,6 +615,7 @@ export const categories: Category[] = [
         name: "Marquee",
         blurb: "Text or content that scrolls continuously in a loop.",
         demo: "looping:marquee",
+        useCaseDemo: "looping:marqueeUseCase",
         controls: [range("speed", "Speed", 2, 20, 1, 8, "s")],
       },
       {
@@ -622,6 +623,7 @@ export const categories: Category[] = [
         name: "Loop",
         blurb: "An animation that repeats, a set number of times or infinitely.",
         demo: "looping:loop",
+        useCaseDemo: "looping:loopUseCase",
         controls: [duration(0.8, 2)],
       },
       {
@@ -629,6 +631,7 @@ export const categories: Category[] = [
         name: "Alternate (yoyo)",
         blurb: "A loop that plays forward then reverses each iteration, instead of jumping back to the start.",
         demo: "looping:alternate",
+        useCaseDemo: "looping:alternateUseCase",
         controls: [duration(0.9, 2)],
       },
       {
@@ -636,6 +639,7 @@ export const categories: Category[] = [
         name: "Orbit",
         blurb: "An element circling around another in a continuous path.",
         demo: "looping:orbit",
+        useCaseDemo: "looping:orbitUseCase",
         controls: [range("radius", "Radius", 30, 70, 2, 50, "px"), range("speed", "Speed", 1.5, 8, 0.5, 4, "s")],
       },
       {
@@ -643,6 +647,7 @@ export const categories: Category[] = [
         name: "Pulse",
         blurb: "A gentle repeating scale or opacity change to draw attention.",
         demo: "looping:pulse",
+        useCaseDemo: "looping:pulseUseCase",
         controls: [duration(1.2, 3)],
       },
       {
@@ -650,6 +655,7 @@ export const categories: Category[] = [
         name: "Float",
         blurb: "A gentle, continuous up-and-down drift that makes a static element feel alive and weightless.",
         demo: "looping:float",
+        useCaseDemo: "looping:floatUseCase",
         controls: [range("amplitude", "Amplitude", 4, 30, 1, 12, "px"), duration(2.4, 5)],
       },
       {
@@ -657,6 +663,7 @@ export const categories: Category[] = [
         name: "Idle animation",
         blurb: "Subtle motion that plays while an element is just sitting there, waiting to be interacted with.",
         demo: "looping:idle",
+        useCaseDemo: "looping:idleUseCase",
       },
     ],
   },
