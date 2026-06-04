@@ -15,6 +15,17 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
     <span class="hero__blob hero__blob--1 gradient-phoenix"></span>
     <span class="hero__blob hero__blob--2 gradient-cyan"></span>
   </div>
+  <div class="hero__media" aria-hidden="true">
+    <img
+      class="hero__illustration"
+      src="/hero-illustration.webp"
+      alt=""
+      width="1672"
+      height="941"
+      loading="eager"
+      decoding="async"
+    />
+  </div>
   <div class="hero__inner">
     <div class="hero__copy">
       <span class="hero__eyebrow">{eyebrow}</span>
@@ -24,30 +35,24 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
         <a class="btn btn--dark" href="#glossary">{ui.heroCta}</a>
       </div>
     </div>
-    <div class="hero__media" aria-hidden="true">
-      <img
-        class="hero__illustration"
-        src="/hero-illustration.webp"
-        alt=""
-        width="1672"
-        height="941"
-        loading="eager"
-        decoding="async"
-      />
-    </div>
   </div>
 </section>
 
 <style>
   .hero {
     position: relative;
-    overflow: hidden;
+    z-index: 1;
+    /* Clip the side-bleed so it never adds horizontal scroll, but let the
+       illustration spill below the section so the next one can overlap it. */
+    overflow-x: clip;
+    overflow-y: visible;
     border-bottom: 1px solid var(--border-hairline);
   }
   .hero__bg {
     position: absolute;
     inset: 0;
     z-index: 0;
+    overflow: hidden;
     filter: blur(70px) saturate(115%);
     opacity: 0.55;
   }
@@ -85,20 +90,25 @@ const eyebrow = ui.heroEyebrow.replace("{count}", String(termCount));
     max-width: 1200px;
     margin: 0 auto;
     padding: 96px 24px 72px;
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    align-items: center;
-    gap: 48px;
+  }
+  .hero__copy {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
   }
   .hero__media {
-    justify-self: end;
-    width: 100%;
-    max-width: 560px;
+    position: absolute;
+    z-index: 0;
+    right: clamp(-60px, calc((100% - 1200px) / 2 + 8px), 40px);
+    bottom: -96px;
+    width: min(60vw, 760px);
+    pointer-events: none;
   }
   .hero__illustration {
     display: block;
     width: 100%;
     height: auto;
+    filter: drop-shadow(0 28px 60px rgba(20, 20, 40, 0.12));
     animation: hero-float 9s ease-in-out infinite alternate;
   }
   @keyframes hero-float {
