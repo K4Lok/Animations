@@ -820,6 +820,7 @@ export const categories: Category[] = [
         name: "Purposeful animation",
         blurb: "Motion should serve a function — orient, give feedback, show relationships — not just decorate.",
         demo: "principles:purposeful",
+        useCaseDemo: "principles:purposefulUseCase",
         controls: [toggle("gratuitous", "Make it gratuitous", false)],
       },
       {
@@ -827,6 +828,7 @@ export const categories: Category[] = [
         name: "Anticipation",
         blurb: "A small wind-up in the opposite direction before a move, hinting at what's about to happen.",
         demo: "principles:anticipation",
+        useCaseDemo: "principles:anticipationUseCase",
         controls: [toggle("on", "Anticipation", true)],
       },
       {
@@ -834,6 +836,7 @@ export const categories: Category[] = [
         name: "Follow-through",
         blurb: "Parts of an element keep moving and settle slightly after the main motion stops, adding weight.",
         demo: "principles:followThrough",
+        useCaseDemo: "principles:followThroughUseCase",
         controls: [toggle("on", "Follow-through", true)],
       },
       {
@@ -841,6 +844,7 @@ export const categories: Category[] = [
         name: "Squash & stretch",
         blurb: "Deforming an element as it moves to convey weight, speed, and flexibility.",
         demo: "principles:squashStretch",
+        useCaseDemo: "principles:squashStretchUseCase",
         controls: [range("amount", "Amount", 0, 0.6, 0.05, 0.3)],
       },
       {
@@ -848,6 +852,7 @@ export const categories: Category[] = [
         name: "Perceived performance",
         blurb: "The right animation makes an interface feel faster, even when it isn't.",
         demo: "principles:perceivedPerf",
+        useCaseDemo: "principles:perceivedPerfUseCase",
         controls: [toggle("skeleton", "Use skeleton", true)],
       },
       {
@@ -855,6 +860,7 @@ export const categories: Category[] = [
         name: "Frequency of use",
         blurb: "The more often a user sees an animation, the shorter and subtler it should be.",
         demo: "principles:frequency",
+        useCaseDemo: "principles:frequencyUseCase",
         controls: [range("subtlety", "Restraint", 0, 1, 0.05, 0.6)],
       },
       {
@@ -862,6 +868,7 @@ export const categories: Category[] = [
         name: "Spatial consistency",
         blurb: "Animating so an element keeps its identity and position across states, so users never lose track of where things went.",
         demo: "principles:spatialConsistency",
+        useCaseDemo: "principles:spatialConsistencyUseCase",
         controls: [toggle("animate", "Animate the move", true)],
       },
       {
@@ -869,12 +876,14 @@ export const categories: Category[] = [
         name: "Hardware acceleration",
         blurb: "Animating transform and opacity lets the GPU keep motion smooth.",
         demo: "principles:hardwareAccel",
+        useCaseDemo: "principles:hardwareAccelUseCase",
       },
       {
         id: "reduced-motion",
         name: "Reduced motion",
         blurb: "Respecting the user's prefers-reduced-motion setting by toning down or removing motion.",
         demo: "principles:reducedMotion",
+        useCaseDemo: "principles:reducedMotionUseCase",
         controls: [toggle("reduce", "Reduce motion", false)],
       },
     ],
