@@ -270,7 +270,7 @@ const clipPathUseCase: DemoFactory = (stage) => {
   const tile = imageTile({ i: 4, radius: 0 });
   tile.style.cssText += ";position:absolute;inset:0";
   win.append(tile);
-  const cap = elem("span", "uikit-tile__cap", "position:absolute;left:0;bottom:0;z-index:1;opacity:0");
+  const cap = elem("span", "uikit-tile__cap", "position:absolute;left:0;bottom:0;z-index:1;opacity:0;pointer-events:none");
   cap.textContent = dt("Now live");
   f.append(win, cap);
   stage.append(f);
