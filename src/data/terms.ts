@@ -677,6 +677,7 @@ export const categories: Category[] = [
         name: "Blur",
         blurb: "A blur filter used to soften an element or mask tiny imperfections.",
         demo: "polish:blur",
+        useCaseDemo: "polish:blurUseCase",
         controls: [range("blur", "Blur", 0, 20, 1, 10, "px"), duration(0.8, 2)],
       },
       {
@@ -684,6 +685,7 @@ export const categories: Category[] = [
         name: "Clip-path",
         blurb: "Clipping an element to a shape, used for reveals, masks, and before/after sliders.",
         demo: "polish:clipPath",
+        useCaseDemo: "polish:clipPathUseCase",
         controls: [
           { kind: "select", key: "shape", label: "Shape", options: [
             { label: "Circle", value: "circle" },
@@ -698,6 +700,7 @@ export const categories: Category[] = [
         name: "Mask",
         blurb: "Hiding or revealing parts of an element using a shape or gradient — like clip-path, but with soft, fadeable edges.",
         demo: "polish:mask",
+        useCaseDemo: "polish:maskUseCase",
         controls: [duration(1.2, 3)],
       },
       {
@@ -705,12 +708,14 @@ export const categories: Category[] = [
         name: "Before / after slider",
         blurb: "A draggable divider that wipes between two overlaid images to compare them.",
         demo: "polish:beforeAfter",
+        useCaseDemo: "polish:beforeAfterUseCase",
       },
       {
         id: "line-drawing",
         name: "Line drawing",
         blurb: "An SVG path that draws itself in, like an invisible pen tracing it.",
         demo: "polish:lineDrawing",
+        useCaseDemo: "polish:lineDrawingUseCase",
         controls: [duration(1.6, 4)],
       },
       {
@@ -718,12 +723,14 @@ export const categories: Category[] = [
         name: "Text morph",
         blurb: "Text that animates character by character when it changes, drawing attention to the new value.",
         demo: "polish:textMorph",
+        useCaseDemo: "polish:textMorphUseCase",
       },
       {
         id: "skeleton",
         name: "Skeleton / Shimmer",
         blurb: "A placeholder with a moving sheen shown while content loads.",
         demo: "polish:skeleton",
+        useCaseDemo: "polish:skeletonUseCase",
         controls: [range("speed", "Speed", 0.6, 3, 0.1, 1.4, "s")],
       },
       {
@@ -731,6 +738,7 @@ export const categories: Category[] = [
         name: "Number ticker",
         blurb: "Digits rolling or counting up to a value.",
         demo: "polish:numberTicker",
+        useCaseDemo: "polish:numberTickerUseCase",
         controls: [range("target", "Target", 100, 9999, 1, 4096), duration(1.4, 3)],
       },
       {
@@ -738,6 +746,7 @@ export const categories: Category[] = [
         name: "Tabular numbers",
         blurb: "Fixed-width digits so numbers don't shift around as they change. Essential for tickers, timers, and counters.",
         demo: "polish:tabularNumbers",
+        useCaseDemo: "polish:tabularNumbersUseCase",
         controls: [toggle("tabular", "Tabular", true)],
       },
       {
@@ -745,6 +754,7 @@ export const categories: Category[] = [
         name: "Typewriter",
         blurb: "Text appearing one character at a time, as if being typed.",
         demo: "polish:typewriter",
+        useCaseDemo: "polish:typewriterUseCase",
         controls: [range("speed", "Speed", 20, 160, 5, 60, "ms")],
       },
     ],
