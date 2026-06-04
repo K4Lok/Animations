@@ -18,7 +18,11 @@ const ui = t(locale);
 const categories = localizeCategories(locale);
 
 const canonical = localeUrl(locale, "/");
-const ogImage = `${SITE}/favicon.svg`;
+const ogImage = `${SITE}/hero-illustration.webp`;
+const author = "Sam KaLok";
+
+const termCount = categories.reduce((n, cat) => n + cat.terms.length, 0);
+const keywords = [...categories.map((cat) => cat.title), ...categories.flatMap((cat) => cat.terms.map((term) => term.name))];
 
 // hreflang alternates for every locale + an x-default pointing at the root (en).
 const alternates = LOCALES.map((loc) => ({
@@ -26,24 +30,58 @@ const alternates = LOCALES.map((loc) => ({
   href: localeUrl(loc, "/"),
 }));
 
-// JSON-LD glossary: a DefinedTermSet whose members are every animation term.
+// JSON-LD knowledge graph: the author, the site, and the glossary as a
+// DefinedTermSet. Each term gets its own @id + url anchor so a search or AI
+// engine can cite a single animation term, not just the set as a whole.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "DefinedTermSet",
-  "@id": canonical,
-  name: ui.metaTitle,
-  description: ui.metaDescription,
-  url: canonical,
-  inLanguage: meta.htmlLang,
-  hasDefinedTerm: categories.flatMap((cat) =>
-    cat.terms.map((term) => ({
-      "@type": "DefinedTerm",
-      name: term.name,
-      description: term.blurb,
-      inDefinedTermSet: canonical,
-      termCode: term.id,
-    }))
-  ),
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE}/#author`,
+      name: author,
+      url: SITE,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE}/#website`,
+      url: SITE,
+      name: "Animation Vocabulary",
+      description: ui.metaDescription,
+      inLanguage: meta.htmlLang,
+      publisher: { "@id": `${SITE}/#author` },
+    },
+    {
+      "@type": "DefinedTermSet",
+      "@id": `${canonical}#glossary`,
+      name: ui.metaTitle,
+      description: ui.metaDescription,
+      url: canonical,
+      inLanguage: meta.htmlLang,
+      creator: { "@id": `${SITE}/#author` },
+      isPartOf: { "@id": `${SITE}/#website` },
+      numberOfItems: termCount,
+      keywords: categories.map((cat) => cat.title),
+      hasPart: categories.map((cat) => ({
+        "@type": "DefinedTermSet",
+        "@id": `${canonical}#${cat.id}`,
+        name: cat.title,
+        description: cat.subtitle,
+        url: `${canonical}#${cat.id}`,
+      })),
+      hasDefinedTerm: categories.flatMap((cat) =>
+        cat.terms.map((term) => ({
+          "@type": "DefinedTerm",
+          "@id": `${canonical}#${term.id}`,
+          name: term.name,
+          description: term.blurb,
+          termCode: term.id,
+          url: `${canonical}#${term.id}`,
+          inDefinedTermSet: { "@id": `${canonical}#glossary` },
+        }))
+      ),
+    },
+  ],
 };
 
 // Client strings the playground web component renders after hydration.
@@ -65,6 +103,12 @@ const pgI18n = {
     <meta name="generator" content={Astro.generator} />
     <title>{ui.metaTitle}</title>
     <meta name="description" content={ui.metaDescription} />
+    <meta name="author" content={author} />
+    <meta name="keywords" content={keywords.join(", ")} />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <link rel="canonical" href={canonical} />
     {
       alternates.map((alt) => (
@@ -85,13 +129,21 @@ const pgI18n = {
       ))
     }
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1672" />
+    <meta property="og:image:height" content="941" />
+    <meta property="og:image:alt" content={ui.metaTitle} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={ui.metaTitle} />
     <meta name="twitter:description" content={ui.metaDescription} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ui.metaTitle} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta name="theme-color" content="#111111" />
     <script
       type="application/ld+json"
       is:inline

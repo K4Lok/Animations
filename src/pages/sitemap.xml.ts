@@ -11,9 +11,12 @@ const alternates = LOCALES.map(
   .join("\n");
 
 export const GET: APIRoute = () => {
+  const lastmod = new Date().toISOString().slice(0, 10);
   const urls = LOCALES.map(
     (loc) => `  <url>
     <loc>${localeUrl(loc, "/")}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
 ${alternates}
   </url>`
   ).join("\n");

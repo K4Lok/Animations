@@ -6,6 +6,8 @@ export const GET: APIRoute = () => {
 Allow: /
 
 Sitemap: ${SITE}/sitemap.xml
+
+# LLM-readable glossary summary: ${SITE}/llms.txt
 `;
 
   return new Response(body, {
